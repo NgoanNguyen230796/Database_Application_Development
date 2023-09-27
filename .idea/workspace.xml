@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b9b2d867-817b-41cd-b4b9-3b598c95e338" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2VKrV2ASRThYaYdScm6OLEvUSyJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Database",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Database\Session\Session03" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b9b2d867-817b-41cd-b4b9-3b598c95e338" name="Changes" comment="" />
+      <created>1694595633162</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694595633162</updated>
+      <workItem from="1694595634145" duration="722000" />
+      <workItem from="1694662045062" duration="2121000" />
+      <workItem from="1694693997389" duration="16298000" />
+      <workItem from="1694727528352" duration="1601000" />
+      <workItem from="1694738758778" duration="1092000" />
+      <workItem from="1694761769937" duration="1546000" />
+      <workItem from="1694860212246" duration="1415000" />
+      <workItem from="1695196608599" duration="234000" />
+      <workItem from="1695198002638" duration="245000" />
+      <workItem from="1695198274390" duration="161000" />
+      <workItem from="1695198445786" duration="1023000" />
+      <workItem from="1695372244557" duration="3247000" />
+      <workItem from="1695456798923" duration="60000" />
+      <workItem from="1695631601932" duration="432000" />
+      <workItem from="1695641886560" duration="29000" />
+      <workItem from="1695811252311" duration="115000" />
+      <workItem from="1695811802867" duration="234000" />
+      <workItem from="1695812084705" duration="63000" />
+      <workItem from="1695812190517" duration="85000" />
+      <workItem from="1695814610261" duration="4000" />
+      <workItem from="1695814649152" duration="609000" />
+      <workItem from="1695815273239" duration="18000" />
+      <workItem from="1695815329220" duration="374000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
