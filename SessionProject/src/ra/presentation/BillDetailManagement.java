@@ -18,9 +18,9 @@ public class BillDetailManagement {
 
     public static void displayBillDetail(Bill bil) throws SQLException {
         listBillDetail = BillDetailBusiness.getAllDataBillDetailByReceipt(bil.getBill_Id());
-        String repeated = new String(new char[127]).replace("\0", border);
+        String repeated = new String(new char[117]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã phiếu nhập", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
+        System.out.printf("| %-20s | %-20s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã code", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         listBillDetail.forEach(Bill_Detail::displayDataBillDetail);
         System.out.println("* " + repeated + " *");
@@ -28,18 +28,18 @@ public class BillDetailManagement {
 
     public static void displayBillDetailForReceipt() throws SQLException {
         listBillDetail=BillDetailBusiness.getAllDataBillDetail();
-        String repeated = new String(new char[127]).replace("\0", border);
+        String repeated = new String(new char[117]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã phiếu nhập", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
+        System.out.printf("| %-20s | %-20s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã code", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         listBillDetail.forEach(Bill_Detail::displayDataBillDetail);
         System.out.println("* " + repeated + " *");
     }
     public static void displayBillDetailForBill() throws SQLException {
         listBillDetail=BillDetailBusiness.getAllDataBill();
-        String repeated = new String(new char[127]).replace("\0", border);
+        String repeated = new String(new char[117]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã phiếu nhập", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
+        System.out.printf("| %-20s | %-20s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã code", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         listBillDetail.forEach(Bill_Detail::displayDataBillDetail);
         System.out.println("* " + repeated + " *");

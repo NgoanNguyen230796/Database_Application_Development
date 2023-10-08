@@ -314,7 +314,8 @@ public class Account {
     public void displayDataAccount() {
         String permissionValue = this.permission ? "User" : "Admin";
         String accStatusValue = this.acc_Status ? "Active" : "Block";
-        System.out.printf("| %-15d | %-30s | %-15s | %-30s | %-20s | %-20s |\n", this.acc_Id, this.user_Name, this.password, permissionValue, this.emp_Id, accStatusValue);
+        System.out.printf("| %-15d | %-30s | %-15s | %-30s | %-20s | %-20s |\n", this.acc_Id, this.user_Name, this.password,
+                permissionValue, this.emp_Id, accStatusValue);
     }
 
 

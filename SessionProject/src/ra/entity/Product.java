@@ -324,7 +324,7 @@ public class Product {
 
     public void displayDataProduct() {
         String productStatusValue = this.product_Status ? "Hoạt động" : "Không hoạt động";
-        System.out.printf("| %-20s | %-50s | %-20s | %-20s | %-20d | %-20d | %-20s|\n", this.product_Id, this.product_Name, this.manufacturer, this.created, this.batch, this.quantity, productStatusValue);
+        System.out.printf("| %-20s | %-30s | %-20s | %-20s | %-20d | %-15d | %-20s|\n", this.product_Id, this.product_Name, this.manufacturer, this.created, this.batch, this.quantity, productStatusValue);
 
     }
 

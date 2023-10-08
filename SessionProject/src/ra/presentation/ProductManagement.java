@@ -672,9 +672,9 @@ public class ProductManagement {
     public static void paginationDataProduct(int perPage, int cntPage, int i, float maxPage,
                                              int cntAllDataOfProduct) throws SQLException {
         List<Product> listProduct = null;
-        String repeated = new String(new char[187]).replace("\0", border);
+        String repeated = new String(new char[162]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-50s | %-20s | %-20s | %-20s | %-20s | %-20s|\n", "Mã sản phẩm", "Tên sản phẩm", "Nhà sản xuất", "Ngày tạo", "Lô chứa sản phẩm", "Số lượng", "Trạng thái");
+        System.out.printf("| %-20s | %-30s | %-20s | %-20s | %-20s | %-15s | %-20s|\n", "Mã sản phẩm", "Tên sản phẩm", "Nhà sản xuất", "Ngày tạo", "Lô chứa sản phẩm", "Số lượng", "Trạng thái");
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         listProduct = ProductBusiness.getAllDataProduct(perPage, cntPage);
         listProduct.forEach(Product::displayDataProduct);

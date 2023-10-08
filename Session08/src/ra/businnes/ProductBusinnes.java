@@ -36,9 +36,8 @@ public class ProductBusinnes {
                 pr.setProductStatus(rs.getBoolean("productStatus"));
                 listProduct.add(pr);
             }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             ConnectDB.closeConnection(conn, callSt);
         }

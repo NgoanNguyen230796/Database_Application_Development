@@ -690,9 +690,9 @@ public class AccountManagement {
             List<Account> listAccount = null;
             listAccount = AccountBusiness.searchDataAccountByAccountUserName(inputSearch);
             if (!listAccount.isEmpty()) {
-                String repeated = new String(new char[145]).replace("\0", border);
+                String repeated = new String(new char[168]).replace("\0", border);
                 System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-                System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s |\n", "Mã tài khoản", "Tên tài khoản", "Mật khẩu", "Quyền tài khoản", "Mã nhân viên", "Trạng thái");
+                System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-20s |\n", "Mã tài khoản", "Tên tài khoản", "Mật khẩu", "Quyền tài khoản", "Mã nhân viên","Tên nhân viên", "Trạng thái");
                 System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
                 listAccount.forEach(Account::displayDataAccount);
                 System.out.println("* " + repeated + " *");

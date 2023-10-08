@@ -23,13 +23,15 @@ public class CategoriesBusinnes {
         CallableStatement callSt = null;
         try {
             conn = ConnectDB.openConnection();
+            //Tạo câu lệnh SQL
             callSt = conn.prepareCall("{call get_all_data_categories()}");
-            //Thực hiện gọi procedue
+            //Thực hiện gọi procedure
             ResultSet rs = callSt.executeQuery();
-            //Duyệt các bản ghi trong rs và đẩy ra listProduct
+            //Duyệt các bản ghi trong rs và đẩy ra listCategories
             listCategories = new ArrayList<>();
             while (rs.next()) {
                 Categories ca = new Categories();
+
                 ca.setCatalogId(rs.getInt("catalogId"));
                 ca.setCatalogName(rs.getString("catalogName"));
                 ca.setPriority(rs.getInt("priority"));
@@ -37,13 +39,9 @@ public class CategoriesBusinnes {
                 listCategories.add(ca);
             }
 
-        } catch (SQLException ex1){
-            ex1.printStackTrace();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             ConnectDB.closeConnection(conn, callSt);
         }
         return listCategories;
@@ -59,13 +57,14 @@ public class CategoriesBusinnes {
         CallableStatement callSt = null;
         try {
             conn = ConnectDB.openConnection();
+            //Tạo câu lệnh SQL
             callSt = conn.prepareCall("{call get_all_data_categories_by_priority()}");
-            //Thực hiện gọi procedue
+            //Thực hiện gọi procedure
             ResultSet rs = callSt.executeQuery();
-            //Duyệt các bản ghi trong rs và đẩy ra listProduct
             listCategories = new ArrayList<>();
             while (rs.next()) {
                 Categories ca = new Categories();
+                //Duyệt các bản ghi trong rs và đẩy ra listCategories
                 ca.setCatalogId(rs.getInt("catalogId"));
                 ca.setCatalogName(rs.getString("catalogName"));
                 ca.setPriority(rs.getInt("priority"));
@@ -92,7 +91,7 @@ public class CategoriesBusinnes {
             callSt.setString(1, ca.getCatalogName());
             callSt.setInt(2, ca.getPriority());
             callSt.setBoolean(3, ca.getCatalogStatus());
-            // Thực hiện gọi procrdue
+            // Thực hiện lệnh SQL
             callSt.executeUpdate();
             result = true;
 
@@ -184,6 +183,7 @@ public class CategoriesBusinnes {
         }
         return listCategories;
     }
+
     public static boolean deleteDataCategories(int CategoriesId) throws SQLException {
         Connection conn = null;
         CallableStatement callSt = null;
@@ -225,7 +225,6 @@ public class CategoriesBusinnes {
         }
         return result;
     }
-
 
 
 }

@@ -113,7 +113,7 @@ BEGIN
 end //
 DELIMITER ;
 
-call get_count_all_data_product();
+
 
 -- get data in table Product by_productId
 DELIMITER //
@@ -205,9 +205,6 @@ BEGIN
     where product_Name like concat('%', input_search_data, '%');
 end //
 DELIMITER ;
-
-call search_get_all_data_product_by_product_Name('San');
-
 
 -- Cập nhật trạng thái cho bảng product
 DELIMITER //
@@ -391,7 +388,6 @@ DELIMITER ;
 insert into Account(user_Name, password, permission, emp_Id, acc_Status)
 VALUES ('user1', '891011', 1, 'NV001', 1);
 
-call update_data_by_employeeStatus('NV001', 1);
 select *
 from Employee;
 select *
@@ -562,9 +558,6 @@ BEGIN
 end //
 DELIMITER ;
 
-call search_data_account_by_accountUserName_or_Emp_Name('admin1');
-
-
 -- --------------------------------RECEIPT MANAGEMENT--------------------------------------------------
 -- 1. Danh sách phiếu nhập từ bảng Bill
 
@@ -654,7 +647,6 @@ BEGIN
 end //
 DELIMITER ;
 
-call creat_data_receipt('C0020', 1, 'NV001', null, 0);
 
 -- Duyệt phiếu nhập
 DELIMITER //
@@ -726,8 +718,6 @@ BEGIN
 end //
 DELIMITER ;
 
-
-call get_data_by_billType_or_billCode_and_billStatus('3');
 -- cập nhật dữ liệu cho phiếu nhập
 DELIMITER //
 create procedure update_data_receipt(
@@ -830,7 +820,6 @@ BEGIN
     end if;
 end //
 DELIMITER ;
-call update_data_receipt('1', 'NV008', '2023-9-23', 'NV009', '2023-10-3', 0);
 
 -- check trùng phiếu nhập
 DELIMITER //
@@ -863,7 +852,7 @@ create procedure get_all_data_billDetail_by_receipt(
     in input_bill_Id bigint
 )
 BEGIN
-    select biDet.bill_Detail_Id, biDet.bill_Id, biDet.product_Id, biDet.quantity, biDet.price
+    select biDet.*,bil.bill_Code as 'billCode'
     from Bill_Detail biDet
              join Bill bil on biDet.bill_Id = bil.bill_Id
     where biDet.bill_Id = input_bill_Id;
@@ -878,7 +867,6 @@ from Bill bi
 where bi.bill_Type = true;
 select *
 from Bill_Detail;
-call get_all_data_billDetail_by_receipt(1);
 insert into Bill_Detail(bill_Id, product_Id, quantity, price)
 VALUES (1, 'SP009', 22, 110000),
        (1, 'SP007', 96, 45000);
@@ -898,7 +886,7 @@ DELIMITER ;
 DELIMITER //
 create procedure get_data_Bill_By_Bill_Type1()
 BEGIN
-    select biDet.*
+    select biDet.*,bil.bill_Code as 'billCode'
     from Bill_Detail biDet
              join Bill bil on biDet.bill_Id = bil.bill_Id
     where bil.bill_Type = false;
@@ -1009,7 +997,6 @@ BEGIN
 end //
 DELIMITER ;
 
-call approveReceipt(17);
 
 DELIMITER //
 create procedure isCheckApproveBill(
@@ -1037,6 +1024,13 @@ BEGIN
     end if;
 end //
 DELIMITER ;
+
+select billDetail.product_Id,sum(billDetail.quantity)
+from Bill bil
+         inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
+         inner join Product pr on billDetail.product_Id = pr.product_Id
+where bil.bill_Id=7
+group by billDetail.product_Id;
 
 -- Duyệt phiếu xuất
 DELIMITER //
@@ -1075,8 +1069,6 @@ BEGIN
     end if;
 end //
 DELIMITER ;
-
-call approveBill(11, 'NV001', '2023-5-12', 'NHập đó');
 
 -- 1. Thống kê chi phí(theo phiếu nhập) theo ngày, tháng, năm
 DELIMITER //
@@ -1256,8 +1248,6 @@ BEGIN
 end //
 DELIMITER ;
 
-
-call get_all_data_receipt_Bill_Status_by_Emp_id('NV005');
 -- Danh sách Bill của input_Emp_id theo phiếu nhập và trạng thái không phải là duyệt
 
 DELIMITER //
@@ -1272,5 +1262,20 @@ BEGIN
       and bill_Status <> 2;
 end //
 DELIMITER ;
+
+-- Kiểm tra trong 1 Bill của Bill Detail thì productName k đc trùng nhau
+
+DELIMITER //
+create procedure isCheckProductNameInBillDetail(
+    in input_Bill_Id long
+)
+BEGIN
+    select billDetail.product_Id
+    from Bill_Detail billDetail
+    where billDetail.product_Id=input_Bill_Id;
+end //
+DELIMITER ;
+call isCheckProductNameInBillDetail(7);
+
 
 

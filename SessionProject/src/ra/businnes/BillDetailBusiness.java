@@ -2,6 +2,7 @@ package ra.businnes;
 
 import ra.connect.ConnectDB;
 import ra.entity.Bill;
+import ra.entity.BillDetailDisplay;
 import ra.entity.Bill_Detail;
 
 import java.sql.CallableStatement;
@@ -27,9 +28,10 @@ public class BillDetailBusiness {
             //Lấy dữ liệu rs đẩy vào đối tượng product trả về
             listBillDetail=new ArrayList<>();
             while (rs.next()) {
-                Bill_Detail billDetail =new Bill_Detail();
+                BillDetailDisplay billDetail=new BillDetailDisplay();
                 billDetail.setBill_Detail_Id(rs.getLong("bill_Detail_Id"));
                 billDetail.setBill_Id(rs.getLong("bill_Id"));
+                billDetail.setBillCode(rs.getString("billCode"));
                 billDetail.setProduct_Id(rs.getString("product_Id"));
                 billDetail.setQuantity(rs.getInt("quantity"));
                 billDetail.setPrice(rs.getFloat("price"));
@@ -191,9 +193,10 @@ public class BillDetailBusiness {
             //Lấy dữ liệu rs đẩy vào đối tượng product trả về
             listBillDetail=new ArrayList<>();
             while (rs.next()) {
-                Bill_Detail billDetail =new Bill_Detail();
+                BillDetailDisplay billDetail=new BillDetailDisplay();
                 billDetail.setBill_Detail_Id(rs.getLong("bill_Detail_Id"));
                 billDetail.setBill_Id(rs.getLong("bill_Id"));
+                billDetail.setBillCode(rs.getString("billCode"));
                 billDetail.setProduct_Id(rs.getString("product_Id"));
                 billDetail.setQuantity(rs.getInt("quantity"));
                 billDetail.setPrice(rs.getFloat("price"));
@@ -219,9 +222,10 @@ public class BillDetailBusiness {
             //Lấy dữ liệu rs đẩy vào đối tượng product trả về
             listBillDetail=new ArrayList<>();
             while (rs.next()) {
-                Bill_Detail billDetail =new Bill_Detail();
+                BillDetailDisplay billDetail=new BillDetailDisplay();
                 billDetail.setBill_Detail_Id(rs.getLong("bill_Detail_Id"));
                 billDetail.setBill_Id(rs.getLong("bill_Id"));
+                billDetail.setBillCode(rs.getString("billCode"));
                 billDetail.setProduct_Id(rs.getString("product_Id"));
                 billDetail.setQuantity(rs.getInt("quantity"));
                 billDetail.setPrice(rs.getFloat("price"));

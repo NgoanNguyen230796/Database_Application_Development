@@ -2,7 +2,7 @@ package ra.businnes;
 
 import ra.connect.ConnectDB;
 import ra.entity.Account;
-import ra.entity.Employee;
+import ra.entity.AccountDisplaySearch;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -223,12 +223,13 @@ public class AccountBusiness {
             //Duyệt các bản ghi trong rs và đẩy ra listProduct
             listAccount = new ArrayList<>();
             while (rs.next()) {
-                Account ac = new Account();
+                AccountDisplaySearch ac =new AccountDisplaySearch();
                 ac.setAcc_Id(rs.getInt("acc_Id"));
                 ac.setUser_Name(rs.getString("user_Name"));
                 ac.setPassword(rs.getString("password"));
                 ac.setPermission(rs.getBoolean("permission"));
                 ac.setEmp_Id(rs.getString("emp_Id"));
+                ac.setEm_Name(rs.getString("emName"));
                 ac.setAcc_Status(rs.getBoolean("acc_Status"));
                 listAccount.add(ac);
 //                employeeName=rs.getString("emName");

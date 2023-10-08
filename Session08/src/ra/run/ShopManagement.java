@@ -18,34 +18,40 @@ public class ShopManagement {
     public static List<Categories> listCategories = new ArrayList<>();
     public static List<Product> listProduct = new ArrayList<>();
 
-    public static void main(String[] args) throws SQLException {
-        do {
-            System.out.println("********************SHOP MANAGEMENT********************");
-            System.out.println("1. Quản lý danh mục");
-            System.out.println("2. Quản lý sản phẩm");
-            System.out.println("3. Báo cáo thống kê");
-            System.out.println("4. Thoát");
-            System.out.print("Lựa chọn của bạn:");
-            int choiceShopManagement = validateChoice();
-            switch (choiceShopManagement) {
-                case 1:
-                    ShopManagement.categoryMenu();
-                    break;
-                case 2:
-                    ShopManagement.productMenu();
-                    break;
-                case 3:
-                    ShopManagement.reportManagement();
-                    break;
-                case 4:
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-4");
+    public static void main(String[] args){
+        try{
+            do {
+                System.out.println("********************SHOP MANAGEMENT********************");
+                System.out.println("1. Quản lý danh mục");
+                System.out.println("2. Quản lý sản phẩm");
+                System.out.println("3. Báo cáo thống kê");
+                System.out.println("4. Thoát");
+                System.out.print("Lựa chọn của bạn:");
+                int choiceShopManagement = validateChoice();
+                switch (choiceShopManagement) {
+                    case 1:
+                        ShopManagement.categoryMenu();
+                        break;
+                    case 2:
+                        ShopManagement.productMenu();
+                        break;
+                    case 3:
+                        ShopManagement.reportManagement();
+                        break;
+                    case 4:
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-4");
 
 
-            }
-        } while (true);
+                }
+            } while (true);
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
     }
 
     public static int validateChoice() {
@@ -311,7 +317,7 @@ public class ShopManagement {
                     break;
                 case 9:
                     ShopManagement.displayListDataAllProduct();
-                    ShopManagement.sellProductByProductIdAndQuantity(sc);
+                    ShopManagement.sellProductByProductIdAndQuantity();
                     break;
                 case 10:
                     isExitProductMenu = false;
@@ -497,7 +503,7 @@ public class ShopManagement {
         System.out.println("Nhập vào tên sản phẩm cần tìm kiếm :");
         String productNameSearch = sc.nextLine();
         listProduct = ProductBusinnes.searchDataProductByProductName(productNameSearch);
-        if (listProduct.size() != 0) {
+        if (!listProduct.isEmpty()) {
             System.out.printf("%-20s%-20s%-20s%-20s%-20s%-20s%-20s", "Mã sản phẩm", "Tên sản phẩm", "Giá", "Ngày tạo", "Số lượng", "Lượt xem", "Trạng thái");
             System.out.printf("%-20s\n", "Mã sản phẩm thuộc về");
             for (Product pr : listProduct) {
@@ -517,7 +523,7 @@ public class ShopManagement {
         System.out.println("Nhập vào giá sản phẩm đến:");
         float toPrice = Float.parseFloat(sc.nextLine());
         listProduct = ProductBusinnes.searchDataProductFromPriceToPrice(fromPrice, toPrice);
-        if (listProduct.size() != 0) {
+        if (!listProduct.isEmpty()) {
             System.out.printf("%-20s%-20s%-20s%-20s%-20s%-20s%-20s", "Mã sản phẩm", "Tên sản phẩm", "Giá", "Ngày tạo", "Số lượng", "Lượt xem", "Trạng thái");
             System.out.printf("%-20s\n", "Mã sản phẩm thuộc về");
             for (Product pr : listProduct) {
@@ -530,7 +536,7 @@ public class ShopManagement {
 
     }
 
-    public static void sellProductByProductIdAndQuantity(Scanner sc) throws SQLException {
+    public static void sellProductByProductIdAndQuantity() throws SQLException {
         System.out.println("Nhập vào mã sản phẩm cần bán :");
         String productIdNeedSell = validateProductIdNeedSell();
         Product pr = ProductBusinnes.getProductById(productIdNeedSell);
