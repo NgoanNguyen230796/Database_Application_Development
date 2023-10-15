@@ -108,14 +108,7 @@ public class Bill {
         this.bill_Code = inputBillCodeIsCheckDuplicate();
         this.bill_Type = true;
         //Mã nhân viên nhập/xuất
-        System.out.println("Nhập vào mã nhân viên nhập phiếu = ");
-        this.emp_Id_Created = inputEmpIdCreated();
-//        this.emp_Id_Created = inputEmpIdCreated();
-//        System.out.print("Nhập vào ngày tạo = ");
-        // Ngày tạo Default Curr_date
-//        this.created_Bill = inputCreatedBill();
-        //Mã nhân viên duyệt
-//        this.emp_Id_Auth = inputEmpIdAuth();
+        this.emp_Id_Created = employeeId;
         this.emp_Id_Auth = null;
         //Ngày duyệt
         this.auth_Date=null;
@@ -147,8 +140,9 @@ public class Bill {
         System.out.print("Nhập vào mã code = ");
         this.bill_Code = inputBillCodeIsCheckDuplicate();
         this.bill_Type = false;
-        System.out.println("Nhập vào mã nhân viên xuất phiếu = ");
-        this.emp_Id_Created = inputEmpIdCreatedBill();
+//        System.out.println("Nhập vào mã nhân viên xuất phiếu = ");
+//        this.emp_Id_Created = inputEmpIdCreatedBill();
+        this.emp_Id_Created = employeeId;
         this.emp_Id_Auth = null;
         this.auth_Date=null;
         System.out.println("Nhập vào trạng thái = ");

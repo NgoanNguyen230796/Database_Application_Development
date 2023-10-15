@@ -66,7 +66,6 @@ public class MainManagement {
                                             isCheckPass=false;
                                             isCheckLogin = false;
                                             resetLogin = false;
-
                                         } else {
                                             System.out.println(ColorsMenu.GREEN_BOLD + "Đăng nhập thành công hệ thống cho tài khoản User" + ColorsMenu.ANSI_RESET);
                                             // Show Menu User
@@ -74,7 +73,6 @@ public class MainManagement {
                                             isCheckPass = false;
                                             isCheckLogin = false;
                                             resetLogin = false;
-
                                         }
                                     } else {
                                         System.out.println(ColorsMenu.RED_BOLD + "Tài khoản này đã bị Block rồi,không thể đăng nhập được vào hệ thống,vui lòng nhập lại" + ColorsMenu.ANSI_RESET);
