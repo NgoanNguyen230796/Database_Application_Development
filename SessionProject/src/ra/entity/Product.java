@@ -1,9 +1,11 @@
 package ra.entity;
 
 import ra.businnes.ProductBusiness;
+import ra.colors.ColorsMenu;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ra.presentation.MainManagement.sc;
@@ -87,14 +89,16 @@ public class Product {
     }
 
     public void inputData() {
+        LocalDate currentDate = LocalDate.now();
         System.out.print("Nhập vào mã sản phẩm = ");
         this.product_Id = inputProductId();
         System.out.print("Nhập vào tên sản phẩm = ");
         this.product_Name = inputProductName();
         System.out.print("Nhập vào tên nhà sản xuất = ");
         this.manufacturer = inputManufacturer();
-        System.out.print("Nhập vào ngày tạo = ");
-        this.created = inputCreated();
+
+//        System.out.print("Nhập vào ngày tạo = ");
+        this.created = String.valueOf(currentDate);
         System.out.print("Nhập vào lô chứa sản phẩm = ");
         this.batch = inputBatch();
 //        System.out.print("Nhập vào số lượng sản phẩm = ");
@@ -168,6 +172,25 @@ public class Product {
                         } else {
                             return inputProductNameStr;
                         }
+                    }
+                } catch (Exception ex2) {
+                    System.err.println("Lỗi hệ thống");
+                }
+            }
+        }
+    }
+
+    public static String inputProductNameSearch() {
+        while (true) {
+            String inputProductNameStr = sc.nextLine().trim();
+            if (inputProductNameStr.isEmpty()) {
+                System.err.println("Tên sản phẩm không được để trống, vui lòng nhập lại");
+            } else {
+                try {
+                    if (inputProductNameStr.length() > 150) {
+                        System.err.println("Tên sản phẩm chỉ được phép tối đa 150 ký tự, vui lòng nhập lại");
+                    } else {
+                        return inputProductNameStr;
                     }
                 } catch (Exception ex2) {
                     System.err.println("Lỗi hệ thống");
@@ -292,8 +315,8 @@ public class Product {
 //        }
 //    }
     public static boolean inputProductStatus() {
-        System.out.println("---          1.Hoạt động           --");
-        System.out.println("---          2.Không hoạt động     --");
+        System.out.println(ColorsMenu.GREEN_BOLD + "---          1.Hoạt động           --");
+        System.out.println("---          2.Không hoạt động     --" + ColorsMenu.ANSI_RESET);
         System.out.print("Lựa chọn trạng thái của bạn là :");
         while (true) {
             String inputProductStatus = sc.nextLine().trim();

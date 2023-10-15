@@ -205,6 +205,37 @@ public class ReceiptBusiness {
         }
         return bil;
     }
+    public static Bill getReceiptByBillIdOrBillCodeUser(String employeeId,String inputBill) throws SQLException {
+        Bill bil = null;
+        Connection conn = null;
+        CallableStatement callSt = null;
+        try {
+            conn = ConnectDB.openConnection();
+            callSt = conn.prepareCall("{call get_data_by_billType_or_billCodeUser(?,?)}");
+            //set giá trị tham số vào
+            callSt.setString(1, employeeId);
+            callSt.setString(2, inputBill);
+            //Thực hiện gọi procedure
+            ResultSet rs = callSt.executeQuery();
+            //Lấy dữ liệu rs đẩy vào đối tượng product trả về
+            while (rs.next()) {
+                bil = new Bill();
+                bil.setBill_Id(rs.getLong("bill_Id"));
+                bil.setBill_Code(rs.getString("bill_Code"));
+                bil.setBill_Type(rs.getBoolean("bill_Type"));
+                bil.setEmp_Id_Created(rs.getString("emp_Id_Created"));
+                bil.setCreated_Bill(String.valueOf(rs.getDate("created")));
+                bil.setEmp_Id_Auth(rs.getString("emp_Id_Auth"));
+                bil.setAuth_Date(String.valueOf(rs.getDate("auth_Date")));
+                bil.setBill_Status(rs.getShort("bill_Status"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectDB.closeConnection(conn, callSt);
+        }
+        return bil;
+    }
     public static Bill getReceiptByBillIdOrBillCodeAndBillStatus0(String inputBill) throws SQLException {
         Bill bil = null;
         Connection conn = null;
@@ -472,4 +503,26 @@ public class ReceiptBusiness {
         return listBill;
 
     }
+
+    public static int getCountAllDataReceipt() throws SQLException{
+        int cntEmployee=0;
+        Connection conn = null;
+        CallableStatement callSt = null;
+        try {
+            conn = ConnectDB.openConnection();
+            callSt = conn.prepareCall("{call get_count_all_data_employee()}");
+            //Thực hiện gọi procedue
+            ResultSet rs = callSt.executeQuery();
+            while (rs.next()) {
+                cntEmployee = rs.getInt("cntEmployee");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectDB.closeConnection(conn, callSt);
+        }
+        return cntEmployee;
+
+    }
+
 }

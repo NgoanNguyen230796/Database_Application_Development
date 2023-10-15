@@ -98,7 +98,7 @@ public class ProductManagement {
                         do {
                             System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                             if (i == 1 && maxPage == 1) {
-                                System.out.println("1.Thoát khỏi danh sách nhân viên");
+                                System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 if (choiceNextPage != 0) {
@@ -106,8 +106,8 @@ public class ProductManagement {
                                     break;
                                 }
                             } else if (i == 1) {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
-                                System.out.println("2.Thoát khỏi danh sách sản phẩm");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi danh sách sản phẩm" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
@@ -123,8 +123,8 @@ public class ProductManagement {
                                         System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                 }
                             } else if (i == (int) getTotalPage()) {
-                                System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                System.out.println("2.Thoát khỏi danh sách sản phẩm");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi danh sách sản phẩm" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
@@ -141,10 +141,10 @@ public class ProductManagement {
 
                                 }
                             } else {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                 System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                System.out.println("3.Thoát khỏi danh sách sản phẩm");
-                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "3.Thoát khỏi danh sách sản phẩm" + ColorsMenu.ANSI_RESET);
+                                System.out.println("Vui lòng nhập lựa chọn của bạn : ");
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
                                     case 1:
@@ -168,7 +168,68 @@ public class ProductManagement {
                         } while (isExitDisplayDataProduct);
                     }
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về sản phẩm trong kho"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về sản phẩm trong kho" + ColorsMenu.ANSI_RESET);
+                }
+                break;
+            case DisplayInReceipt:
+                if (cntAllDataOfProduct > 0) {
+                    ProductManagement.paginationDataProduct(perPage, cntPage, i, maxPage, cntAllDataOfProduct);
+                    if (maxPage >= 1) {
+                        boolean isExitDisplayDataProduct = true;
+                        do {
+                            System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
+                           if (i == 1) {
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                choiceNextPage = validateChoiceDisplayData();
+                                switch (choiceNextPage) {
+                                    case 1:
+                                        i = i + 1;
+                                        cntPage = cntPage + indexOfPage;
+                                        ProductManagement.paginationDataProduct(perPage, cntPage, i, maxPage, cntAllDataOfProduct);
+                                        break;
+                                    default:
+                                        System.out.println("Vui lòng nhập lựa chọn");
+                                }
+                            } else if (i == (int) getTotalPage()) {
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                choiceNextPage = validateChoiceDisplayData();
+                                switch (choiceNextPage) {
+                                    case 1:
+                                        i = i - 1;
+                                        cntPage = cntPage - indexOfPage;
+                                        ProductManagement.paginationDataProduct(perPage, cntPage, i, maxPage, cntAllDataOfProduct);
+                                        break;
+                                    default:
+                                        System.out.println("Vui lòng nhập lựa chọn");
+
+                                }
+                            } else {
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                System.out.println("2.Quay lại trang thứ " + (i - 1));
+                                System.out.println("Vui lòng nhập lựa chọn của bạn : ");
+                                choiceNextPage = validateChoiceDisplayData();
+                                switch (choiceNextPage) {
+                                    case 1:
+                                        i = i + 1;
+                                        cntPage = cntPage + indexOfPage;
+                                        ProductManagement.paginationDataProduct(perPage, cntPage, i, maxPage, cntAllDataOfProduct);
+                                        break;
+                                    case 2:
+                                        i = i - 1;
+                                        cntPage = cntPage - indexOfPage;
+                                        ProductManagement.paginationDataProduct(perPage, cntPage, i, maxPage, cntAllDataOfProduct);
+                                        break;
+                                    default:
+                                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
+
+                                }
+                            }
+                        } while (isExitDisplayDataProduct);
+                    }
+                } else {
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về sản phẩm trong kho" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Create:
@@ -181,7 +242,7 @@ public class ProductManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Thêm mới sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -193,7 +254,7 @@ public class ProductManagement {
                                         case 2:
                                             ProductManagement.creatDataProduct(sc);
 //                                            cntPage = 0;
-//                                            i = 1;
+//                                            i =
                                             cntAllDataOfProduct = getCntDataProduct();
                                             maxPage = (int) Math.ceil((double) cntAllDataOfProduct / perPage);
                                             isExitDisplayDataProduct = false;
@@ -202,8 +263,8 @@ public class ProductManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi thêm mới sản phẩm");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi thêm mới sản phẩm" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Thêm mới sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -227,8 +288,8 @@ public class ProductManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi thêm mới sản phẩm");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi thêm mới sản phẩm" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Thêm mới sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -253,9 +314,9 @@ public class ProductManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("3.Thoát khỏi thêm mới sản phẩm");
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi thêm mới sản phẩm" + ColorsMenu.ANSI_RESET);
                                     System.out.println("4.Thêm mới sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -289,27 +350,27 @@ public class ProductManagement {
                         }
                     } while (isCheckExitCreate);
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về sản phẩm trong kho"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về sản phẩm trong kho" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Update:
                 if (cntAllDataOfProduct > 0) {
-                    boolean isCheckExitUpdate=true;
-                    do{
+                    boolean isCheckExitUpdate = true;
+                    do {
                         ProductManagement.paginationDataProduct(perPage, cntPage, i, maxPage, cntAllDataOfProduct);
                         if (maxPage >= 1) {
                             boolean isExitDisplayDataProduct = true;
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Cập nhật sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
                                     switch (choiceNextPage) {
                                         case 1:
                                             isExitDisplayDataProduct = false;
-                                            isCheckExitUpdate=false;
+                                            isCheckExitUpdate = false;
                                             break;
                                         case 2:
                                             ProductManagement.updateDataProduct(sc);
@@ -320,8 +381,8 @@ public class ProductManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi cập nhật sản phẩm");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật sản phẩm" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -333,7 +394,7 @@ public class ProductManagement {
                                             break;
                                         case 2:
                                             isExitDisplayDataProduct = false;
-                                            isCheckExitUpdate=false;
+                                            isCheckExitUpdate = false;
                                             break;
                                         case 3:
                                             ProductManagement.updateDataProduct(sc);
@@ -344,8 +405,8 @@ public class ProductManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi cập nhật sản phẩm");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật sản phẩm" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -357,7 +418,7 @@ public class ProductManagement {
                                             break;
                                         case 2:
                                             isExitDisplayDataProduct = false;
-                                            isCheckExitUpdate=false;
+                                            isCheckExitUpdate = false;
                                             break;
                                         case 3:
                                             ProductManagement.updateDataProduct(sc);
@@ -369,9 +430,9 @@ public class ProductManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("3.Thoát khỏi cập nhật sản phẩm");
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi cập nhật sản phẩm" + ColorsMenu.ANSI_RESET);
                                     System.out.println("4.Cập nhật sản phẩm");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -388,7 +449,7 @@ public class ProductManagement {
                                             break;
                                         case 3:
                                             isExitDisplayDataProduct = false;
-                                            isCheckExitUpdate=false;
+                                            isCheckExitUpdate = false;
                                             break;
                                         case 4:
                                             ProductManagement.updateDataProduct(sc);
@@ -403,10 +464,10 @@ public class ProductManagement {
                             } while (isExitDisplayDataProduct);
                         }
 
-                    }while (isCheckExitUpdate);
+                    } while (isCheckExitUpdate);
 
                 } else {
-                    System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về sản phẩm trong kho"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về sản phẩm trong kho" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case UpdateProductStatus:
@@ -419,7 +480,7 @@ public class ProductManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Cập nhật sản phẩm theo trạng thái");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -437,8 +498,8 @@ public class ProductManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi cập nhật sản phẩm theo trạng thái");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật sản phẩm theo trạng thái" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật sản phẩm theo trạng thái");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -461,8 +522,8 @@ public class ProductManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi cập nhật sản phẩm theo trạng thái");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật sản phẩm theo trạng thái" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật sản phẩm theo trạng thái");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -486,9 +547,9 @@ public class ProductManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("3.Thoát khỏi cập nhật sản phẩm theo trạng thái");
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi cập nhật sản phẩm theo trạng thái" + ColorsMenu.ANSI_RESET);
                                     System.out.println("4.Cập nhật sản phẩm theo trạng thái");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -523,7 +584,7 @@ public class ProductManagement {
                     } while (isCheckExitUpdateProductStatus);
 
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về sản phẩm trong kho"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về sản phẩm trong kho" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Search:
@@ -534,7 +595,7 @@ public class ProductManagement {
                         do {
                             System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                             if (i == 1 && maxPage == 1) {
-                                System.out.println("1.Thoát khỏi tìm kiếm sản phẩm");
+                                System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi tìm kiếm sản phẩm" + ColorsMenu.ANSI_RESET);
                                 System.out.println("2.Tìm kiếm sản phẩm theo tên sản phẩm");
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
@@ -546,7 +607,7 @@ public class ProductManagement {
                                         cntPage = 0;
                                         i = 1;
                                         System.out.println("Nhập vào tên sản phẩm cần tìm kiếm :");
-                                        String productNameSearch = Product.inputProductName();
+                                        String productNameSearch = Product.inputProductNameSearch();
                                         int cntAllDataSearch = ProductBusiness.getAllDataSearchProduct(productNameSearch);
                                         int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
                                         ProductManagement.paginationDataSearchProduct(perPage, cntPage, i, maxPageSearch, productNameSearch, cntAllDataSearch);
@@ -555,12 +616,13 @@ public class ProductManagement {
                                         System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                 }
 //                                if (choiceNextPage != 0) {
+
 //                                    isExitDisplayDataProduct = false;
 //                                    break;
 //                                }
                             } else if (i == 1) {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
-                                System.out.println("2.Thoát khỏi tìm kiếm sản phẩm");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tìm kiếm sản phẩm" + ColorsMenu.ANSI_RESET);
                                 System.out.println("3.Tìm kiếm sản phẩm theo tên sản phẩm");
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
@@ -577,7 +639,7 @@ public class ProductManagement {
                                         cntPage = 0;
                                         i = 1;
                                         System.out.println("Nhập vào tên sản phẩm cần tìm kiếm :");
-                                        String productNameSearch = Product.inputProductName();
+                                        String productNameSearch = Product.inputProductNameSearch();
                                         int cntAllDataSearch = ProductBusiness.getAllDataSearchProduct(productNameSearch);
                                         int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
                                         ProductManagement.paginationDataSearchProduct(perPage, cntPage, i, maxPageSearch, productNameSearch, cntAllDataSearch);
@@ -586,8 +648,8 @@ public class ProductManagement {
                                         System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                 }
                             } else if (i == (int) getTotalPage()) {
-                                System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                System.out.println("2.Thoát khỏi tìm kiếm sản phẩm");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tìm kiếm sản phẩm" + ColorsMenu.ANSI_RESET);
                                 System.out.println("3.Tìm kiếm sản phẩm theo tên sản phẩm");
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
@@ -604,7 +666,7 @@ public class ProductManagement {
                                         cntPage = 0;
                                         i = 1;
                                         System.out.println("Nhập vào tên sản phẩm cần tìm kiếm :");
-                                        String productNameSearch = Product.inputProductName();
+                                        String productNameSearch = Product.inputProductNameSearch();
                                         int cntAllDataSearch = ProductBusiness.getAllDataSearchProduct(productNameSearch);
                                         int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
                                         ProductManagement.paginationDataSearchProduct(perPage, cntPage, i, maxPageSearch, productNameSearch, cntAllDataSearch);
@@ -614,9 +676,9 @@ public class ProductManagement {
 
                                 }
                             } else {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                 System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                System.out.println("3.Thoát khỏi tìm kiếm sản phẩm");
+                                System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi tìm kiếm sản phẩm" + ColorsMenu.ANSI_RESET);
                                 System.out.println("4.Tìm kiếm sản phẩm theo tên sản phẩm");
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
@@ -638,7 +700,7 @@ public class ProductManagement {
                                         cntPage = 0;
                                         i = 1;
                                         System.out.println("Nhập vào tên sản phẩm cần tìm kiếm :");
-                                        String productNameSearch = Product.inputProductName();
+                                        String productNameSearch = Product.inputProductNameSearch();
                                         int cntAllDataSearch = ProductBusiness.getAllDataSearchProduct(productNameSearch);
                                         int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
                                         ProductManagement.paginationDataSearchProduct(perPage, cntPage, i, maxPageSearch, productNameSearch, cntAllDataSearch);
@@ -651,7 +713,7 @@ public class ProductManagement {
                         } while (isExitDisplayDataProduct);
                     }
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về sản phẩm trong kho"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về sản phẩm trong kho" + ColorsMenu.ANSI_RESET);
                 }
                 break;
 
@@ -679,7 +741,7 @@ public class ProductManagement {
         listProduct = ProductBusiness.getAllDataProduct(perPage, cntPage);
         listProduct.forEach(Product::displayDataProduct);
         System.out.println("* " + repeated + " *");
-        System.out.print("| Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
+        System.out.print("  Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
         System.out.print("All data : " + cntAllDataOfProduct + "\n");
         System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
     }
@@ -689,15 +751,15 @@ public class ProductManagement {
         List<Product> listProductSearch = null;
         listProductSearch = ProductBusiness.searchDataProductByProductName(perPage, cntPage, productName);
         if (listProductSearch.isEmpty()) {
-            System.out.println(ColorsMenu.GREEN_BOLD + "Không tìm thấy kết quả" + ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD + "Không tìm thấy kết quả" + ColorsMenu.ANSI_RESET);
         } else {
-            String repeated = new String(new char[187]).replace("\0", border);
+            String repeated = new String(new char[162]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-            System.out.printf("| %-20s | %-50s | %-20s | %-20s | %-20s | %-20s | %-20s|\n", "Mã sản phẩm", "Tên sản phẩm", "Nhà sản xuất", "Ngày tạo", "Lô chứa sản phẩm", "Số lượng", "Trạng thái");
+            System.out.printf("| %-20s | %-30s | %-20s | %-20s | %-20s | %-15s | %-20s|\n", "Mã sản phẩm", "Tên sản phẩm", "Nhà sản xuất", "Ngày tạo", "Lô chứa sản phẩm", "Số lượng", "Trạng thái");
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
             listProductSearch.forEach(Product::displayDataProduct);
             System.out.println("* " + repeated + " *");
-            System.out.print("| Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
+            System.out.print("  Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
             System.out.print("All data search : " + cntAllDataSearchOfProduct + "\n");
             System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
         }
@@ -785,7 +847,7 @@ public class ProductManagement {
                 int choiceUpdate = validateChoiceUpdateProduct();
                 switch (choiceUpdate) {
                     case 1:
-                        System.out.print("Bạn muốn thay đổi tên sản phẩm" + " từ " + "[" + pr.getProduct_Name() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi tên sản phẩm" + " từ " + "[" + ColorsMenu.RED_BOLD + pr.getProduct_Name() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         pr.setProduct_Name(Product.inputProductUpdateName(productIdUpdate));
                         result = ProductBusiness.updateDataProduct(pr);
                         if (result) {
@@ -796,7 +858,7 @@ public class ProductManagement {
                         isExitUpdateDataProductMenu = false;
                         break;
                     case 2:
-                        System.out.print("Bạn muốn thay đổi nhà sản xuất" + " từ " + "[" + pr.getManufacturer() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi nhà sản xuất" + " từ " + "[" + ColorsMenu.RED_BOLD + pr.getManufacturer() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         pr.setManufacturer(Product.inputManufacturer());
                         result = ProductBusiness.updateDataProduct(pr);
                         if (result) {
@@ -807,7 +869,7 @@ public class ProductManagement {
                         isExitUpdateDataProductMenu = false;
                         break;
                     case 3:
-                        System.out.print("Bạn muốn thay đổi ngày tạo" + " từ " + "[" + pr.getCreated() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi ngày tạo" + " từ " + "[" + ColorsMenu.RED_BOLD + pr.getCreated() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         pr.setCreated(Product.inputCreated());
                         result = ProductBusiness.updateDataProduct(pr);
                         if (result) {
@@ -818,7 +880,7 @@ public class ProductManagement {
                         isExitUpdateDataProductMenu = false;
                         break;
                     case 4:
-                        System.out.print("Bạn muốn thay đổi lô chứa sản phẩm" + " từ " + "[" + pr.getBatch() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi lô chứa sản phẩm" + " từ " + "[" + ColorsMenu.RED_BOLD + pr.getBatch() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         pr.setBatch(Product.inputBatch());
                         result = ProductBusiness.updateDataProduct(pr);
                         if (result) {
@@ -849,6 +911,8 @@ public class ProductManagement {
         //Kiểm tra mã sản phẩm có tồn tại hay không
         Product pr = ProductBusiness.getProductById(productIdUpdate);
         if (pr != null) {
+            String productStatusValue = pr.getProduct_Status() ? "Hoạt động" : "Không hoạt động";
+            System.out.println("Bạn muốn thay đổi trạng thái sản phẩm từ " + "[" + ColorsMenu.RED_BOLD + productStatusValue + ColorsMenu.ANSI_RESET + "]" + " thành : ");
             pr.setProduct_Status(Product.inputProductStatus());
             //Thực hiện cập nhật
             boolean result = ProductBusiness.updateProductStatus(pr);

@@ -102,10 +102,30 @@ public class Bill {
         this.bill_Status = bill_Status;
     }
 
-    //Nhập dữ lệu cho phiếu nhập
-    public void inputDataReceiptForBill(String employeeId) throws SQLException {
+    //Nhập dữ lệu cho phiếu nhập Admin
+    public void inputDataReceiptForBillAdmin(String employeeId) throws SQLException {
         System.out.print("Nhập vào mã code = ");
-        this.bill_Code = inputBillCodeIsCheckTrung();
+        this.bill_Code = inputBillCodeIsCheckDuplicate();
+        this.bill_Type = true;
+        //Mã nhân viên nhập/xuất
+        System.out.println("Nhập vào mã nhân viên nhập phiếu = ");
+        this.emp_Id_Created = inputEmpIdCreated();
+//        this.emp_Id_Created = inputEmpIdCreated();
+//        System.out.print("Nhập vào ngày tạo = ");
+        // Ngày tạo Default Curr_date
+//        this.created_Bill = inputCreatedBill();
+        //Mã nhân viên duyệt
+//        this.emp_Id_Auth = inputEmpIdAuth();
+        this.emp_Id_Auth = null;
+        //Ngày duyệt
+        this.auth_Date=null;
+        System.out.println("Nhập vào trạng thái = ");
+        this.bill_Status = inputBillStatus();
+    }
+    //Nhập dữ lệu cho phiếu nhập User
+    public void inputDataReceiptForBillUser(String employeeId) throws SQLException {
+        System.out.print("Nhập vào mã code = ");
+        this.bill_Code = inputBillCodeIsCheckDuplicate();
         this.bill_Type = true;
         //Mã nhân viên nhập/xuất
         this.emp_Id_Created = employeeId;
@@ -122,10 +142,23 @@ public class Bill {
         this.bill_Status = inputBillStatus();
     }
 
-    //Nhập dữ lệu cho phiếu xuất
-    public void inputDataBillForBill(String employeeId) throws SQLException {
+    //Nhập dữ lệu cho phiếu xuất Admin
+    public void inputDataBillForBillAdmin(String employeeId) throws SQLException {
         System.out.print("Nhập vào mã code = ");
-        this.bill_Code = inputBillCodeIsCheckTrung();
+        this.bill_Code = inputBillCodeIsCheckDuplicate();
+        this.bill_Type = false;
+        System.out.println("Nhập vào mã nhân viên xuất phiếu = ");
+        this.emp_Id_Created = inputEmpIdCreatedBill();
+        this.emp_Id_Auth = null;
+        this.auth_Date=null;
+        System.out.println("Nhập vào trạng thái = ");
+        this.bill_Status = inputBillStatus();
+
+    }
+    //Nhập dữ lệu cho phiếu xuất User
+    public void inputDataBillForBillUser(String employeeId) throws SQLException {
+        System.out.print("Nhập vào mã code = ");
+        this.bill_Code = inputBillCodeIsCheckDuplicate();
         this.bill_Type = false;
         this.emp_Id_Created = employeeId;
         this.emp_Id_Auth = null;
@@ -133,15 +166,8 @@ public class Bill {
         System.out.println("Nhập vào trạng thái = ");
         this.bill_Status = inputBillStatus();
 
-//        this.emp_Id_Created = inputEmpIdCreatedBill();
-//        System.out.print("Nhập vào ngày tạo = ");
-//        this.created_Bill = inputCreatedBill();
-//        this.emp_Id_Auth = inputEmpIdAuth();
-//        System.out.print("Nhập vào ngày duyệt = ");
-//        this.auth_Date = inputAuthDate();
-//        System.out.println("Nhập vào trạng thái = ");
-//        this.bill_Status = inputBillStatus();
     }
+    // Nhập dữ liệu khi duyệt
 
     public void inputDataReceiptAuth(long billId, String employeeId) throws SQLException {
         LocalDate currentDate = LocalDate.now();
@@ -169,7 +195,7 @@ public class Bill {
         }
     }
 
-    public static String inputBillCodeIsCheckTrung() {
+    public static String inputBillCodeIsCheckDuplicate() {
         while (true) {
             String inputBillCodeStr = sc.nextLine().trim();
             if (inputBillCodeStr.isEmpty()) {
@@ -225,11 +251,12 @@ public class Bill {
             List<Employee> listEmployee = EmployeeBusiness.getAllDataEmployeeNameActive();
             try {
                 String repeated = new String(new char[20]).replace("\0", border);
-                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " MENU MÃ NHÂN VIÊN NHẬP PHIẾU" + repeated + "----" + " *" + ColorsMenu.ANSI_RESET);
+                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " MENU MÃ NHÂN VIÊN NHẬP PHIẾU" + repeated  + " *" + ColorsMenu.ANSI_RESET);
                 for (int i = 0; i < listEmployee.size(); i++) {
                     System.out.println(ColorsMenu.BLUE_BOLD + (i + 1) + " . " + listEmployee.get(i).getEmp_Id() + ColorsMenu.ANSI_RESET);
                 }
-                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + repeated + repeated + "---" + " *" + ColorsMenu.ANSI_RESET);
+
+                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + repeated + repeated + "---------" + " *" + ColorsMenu.ANSI_RESET);
                 System.out.print("Chọn mã nhân viên nhập phiếu :");
                 while (true) {
                     String inputChoiceNumberStr = sc.nextLine().trim();
@@ -271,7 +298,7 @@ public class Bill {
                 for (int i = 0; i < listEmployee.size(); i++) {
                     System.out.println(ColorsMenu.BLUE_BOLD + (i + 1) + " . " + listEmployee.get(i).getEmp_Id() + ColorsMenu.ANSI_RESET);
                 }
-                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + repeated + repeated + "---" + " *" + ColorsMenu.ANSI_RESET);
+                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + repeated + repeated + "------------" + " *" + ColorsMenu.ANSI_RESET);
                 System.out.print("Chọn mã nhân viên xuất phiếu :");
                 while (true) {
                     String inputChoiceNumberStr = sc.nextLine().trim();
@@ -386,8 +413,8 @@ public class Bill {
 
     public static short inputBillStatus() {
         System.out.println(ColorsMenu.GREEN_BOLD + "---          1.Tạo             --");
-        System.out.println("---          2.Hủy             --");
-        System.out.println("---          3.Duyệt           --" + ColorsMenu.ANSI_RESET);
+        System.out.println("---          2.Hủy             --"+ ColorsMenu.ANSI_RESET);
+//        System.out.println("---          3.Duyệt           --" );
         System.out.print("Lựa chọn trạng thái của bạn là :");
         while (true) {
             String inputBillStatusStr = sc.nextLine().trim();
@@ -396,16 +423,21 @@ public class Bill {
             } else {
                 try {
                     int billStatusStrValue = Integer.parseInt(inputBillStatusStr);
-                    if (billStatusStrValue > 3) {
-                        System.err.println("Trạng thái mà bạn muốn nhập vào phải nhập là 1 hoặc 2 hoặc 3, vui lòng nhập lại");
+                    if (billStatusStrValue > 2) {
+                        System.err.println("Trạng thái mà bạn muốn nhập vào phải nhập là 1 hoặc 2, vui lòng nhập lại");
                     } else if (billStatusStrValue > 0) {
                         if (billStatusStrValue == 1) {
                             return 0;
-                        } else if (billStatusStrValue == 2) {
+                        }else{
                             return 1;
-                        } else {
-                            return 2;
                         }
+//                        if (billStatusStrValue == 1) {
+//                            return 0;
+//                        } else if (billStatusStrValue == 2) {
+//                            return 1;
+//                        } else {
+//                            return 2;
+//                        }
                     } else {
                         System.err.println("Trạng thái mà bạn muốn nhập vào phải là số nguyên lớn hơn 0, vui lòng nhập lại");
                     }
@@ -419,8 +451,8 @@ public class Bill {
     }
 
     public static short inputBillStatusUpdate() {
-        System.out.println(ColorsMenu.GREEN_BOLD + "---          1.Tạo             --");
-        System.out.println("---          2.Hủy             --" + ColorsMenu.ANSI_RESET);
+        System.out.println(ColorsMenu.YELLOW_BOLD + "---          1.Tạo             --"+ ColorsMenu.ANSI_RESET);
+        System.out.println(ColorsMenu.RED_BOLD+"---          2.Hủy             --" + ColorsMenu.ANSI_RESET);
         System.out.print("Lựa chọn trạng thái của bạn là :");
         while (true) {
             String inputBillStatusStr = sc.nextLine().trim();

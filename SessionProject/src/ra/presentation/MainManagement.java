@@ -30,65 +30,77 @@ public class MainManagement {
 //            default:
 //                System.out.println("Vui lòng chọn từ 1-2");
 //        }
-                MainManagement.checkAccount();
+        MainManagement.checkAccount();
     }
 
     public static void checkAccount() throws SQLException {
-        System.out.println(ColorsMenu.YELLOW_UNDERLINED + "============================= Đăng nhập hệ thống =============================" + ColorsMenu.ANSI_RESET);
-        System.out.print(ColorsMenu.YELLOW_BOLD + "1.Vui lòng nhập vào UserName = " + ColorsMenu.ANSI_RESET);
-        do {
-            String userName = sc.nextLine();
-            if (userName.isEmpty()) {
-                System.err.println("Không được để trống UserName, vui lòng nhập lại");
-            } else {
-                //Kiểm tra userName có tồn tại hay không
-                Account ac = AccountBusiness.getAccountByUserName(userName);
-                if (ac != null) {
-                    System.out.print(ColorsMenu.YELLOW_BOLD + "2.Vui lòng nhập vào Password = " + ColorsMenu.ANSI_RESET);
-                    while (true) {
-                        String password = sc.nextLine();
-                        if (password.isEmpty()) {
-                            System.err.println("Không được để trống Password, vui lòng nhập lại");
-                        } else {
-                            //Kiểm tra xem password có đúng k
-                            if (ac.getPassword().equals(password)) {
-                                boolean isCheckPermission = ac.getPermission();
-                                boolean isCheckAccStatus=ac.getAcc_Status();
-                                if(isCheckAccStatus){
-                                    if (!isCheckPermission) {
-                                        System.out.println(ColorsMenu.GREEN_BOLD + "Đăng nhập thành công hệ thống cho tài khoản Admin" + ColorsMenu.ANSI_RESET);
-                                        //Show Menu Admin
-                                        MainManagement.menuAdmin(ac.getEmp_Id());
-                                        break;
+        boolean resetLogin = true;
+        while (resetLogin) {
+            System.out.println(ColorsMenu.YELLOW_UNDERLINED + "============================= Đăng nhập hệ thống =============================" + ColorsMenu.ANSI_RESET);
+            System.out.print(ColorsMenu.YELLOW_BOLD + "1.Vui lòng nhập vào UserName = " + ColorsMenu.ANSI_RESET);
+            boolean isCheckLogin = true;
+            do {
+                String userName = sc.nextLine();
+                if (userName.isEmpty()) {
+                    System.err.println("Không được để trống UserName, vui lòng nhập lại");
+                } else {
+                    //Kiểm tra userName có tồn tại hay không
+                    Account ac = AccountBusiness.getAccountByUserName(userName);
+                    if (ac != null) {
+                        System.out.print(ColorsMenu.YELLOW_BOLD + "2.Vui lòng nhập vào Password = " + ColorsMenu.ANSI_RESET);
+                        boolean isCheckPass = true;
+                        while (isCheckPass) {
+                            String password = sc.nextLine();
+                            if (password.isEmpty()) {
+                                System.err.println("Không được để trống Password, vui lòng nhập lại");
+                            } else {
+                                //Kiểm tra xem password có đúng k
+                                if (ac.getPassword().equals(password)) {
+                                    boolean isCheckPermission = ac.getPermission();
+                                    boolean isCheckAccStatus = ac.getAcc_Status();
+                                    if (isCheckAccStatus) {
+                                        if (!isCheckPermission) {
+                                            System.out.println(ColorsMenu.GREEN_BOLD + "Đăng nhập thành công hệ thống cho tài khoản Admin" + ColorsMenu.ANSI_RESET);
+                                            //Show Menu Admin
+                                            MainManagement.menuAdmin(ac.getEmp_Id(), userName);
+                                            isCheckPass=false;
+                                            isCheckLogin = false;
+                                            resetLogin = false;
+
+                                        } else {
+                                            System.out.println(ColorsMenu.GREEN_BOLD + "Đăng nhập thành công hệ thống cho tài khoản User" + ColorsMenu.ANSI_RESET);
+                                            // Show Menu User
+                                            UserManagement.menuUser(ac.getEmp_Id(), userName);
+                                            isCheckPass = false;
+                                            isCheckLogin = false;
+                                            resetLogin = false;
+
+                                        }
                                     } else {
-                                        System.out.println(ColorsMenu.GREEN_BOLD + "Đăng nhập thành công hệ thống cho tài khoản User" + ColorsMenu.ANSI_RESET);
-                                        // Show Menu User
-                                        UserManagement.menuUser(ac.getEmp_Id(),userName);
+                                        System.out.println(ColorsMenu.RED_BOLD + "Tài khoản này đã bị Block rồi,không thể đăng nhập được vào hệ thống,vui lòng nhập lại" + ColorsMenu.ANSI_RESET);
+                                        isCheckLogin = false;
                                         break;
                                     }
-                                }else{
-                                    System.out.println(ColorsMenu.RED_BOLD+"Tài khoản này đã bị Block rồi,không thể đăng nhập được vào hệ thống"+ColorsMenu.ANSI_RESET);
-                                }
 
-                            } else {
-                                System.err.println("Password không đúng,vui lòng nhập lại");
+                                } else {
+                                    System.err.println("Password không đúng,vui lòng nhập lại");
+                                }
                             }
 
                         }
 
+                    } else {
+                        //userName k tồn tại trong CSDL
+                        System.err.println("UserName không tồn tại,vui lòng nhập lại");
                     }
-                } else {
-                    //userName k tồn tại trong CSDL
-                    System.err.println("UserName không tồn tại,vui lòng nhập lại");
                 }
-            }
+            } while (isCheckLogin);
+        }
 
-
-        } while (true);
     }
 
     //Menu Admin
-    public static void menuAdmin(String employeeId) throws SQLException {
+    public static void menuAdmin(String employeeIdOfUserName, String userName) throws SQLException {
         do {
             String repeated = new String(new char[69]).replace("\0", border);
             System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
@@ -108,16 +120,16 @@ public class MainManagement {
                     ProductManagement.displayProductMenu();
                     break;
                 case 2:
-                    EmployeeManagement.displayEmployeeMenu();
+                    EmployeeManagement.displayEmployeeMenu(employeeIdOfUserName, userName);
                     break;
                 case 3:
-                    AccountManagement.displayAccountMenu();
+                    AccountManagement.displayAccountMenu(employeeIdOfUserName, userName);
                     break;
                 case 4:
-                    ReceiptManagement.displayReceiptMenu(employeeId);
+                    ReceiptManagement.displayReceiptMenu(employeeIdOfUserName);
                     break;
                 case 5:
-                    BillManagement.displayBillMenu(employeeId);
+                    BillManagement.displayBillMenu(employeeIdOfUserName);
                     break;
 
                 case 6:
@@ -151,7 +163,6 @@ public class MainManagement {
             }
         }
     }
-
 
 
 }

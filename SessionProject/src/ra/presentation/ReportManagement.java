@@ -2,8 +2,12 @@ package ra.presentation;
 
 import ra.businnes.ReportBusiness;
 import ra.colors.ColorsMenu;
+import ra.entity.StatisticsForBill;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import static ra.presentation.MainManagement.sc;
 
@@ -34,7 +38,7 @@ public class ReportManagement {
                     ReportManagement.statisticsExpenseReceiptByDayMonthYear();
                     break;
                 case 2:
-                    ReportManagement.statisticsExpenseReceiptByMonthYear();
+                    ReportManagement.statisticsExpenseReceiptByInterval();
                     break;
                 case 3:
                     ReportManagement.statisticsRevenueBillByDayMonthYear();
@@ -86,95 +90,192 @@ public class ReportManagement {
         }
     }
 
+    //1. Thống kê chi phí theo ngày, tháng, năm
     public static void statisticsExpenseReceiptByDayMonthYear() throws SQLException {
-        System.out.println("Thống kê chi phí theo ngày, tháng, năm là :");
-        String repeated = new String(new char[43]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-20s |\n", "Thời gian", "Chi phí");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsExpenseReceiptByDayMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào ngày tháng năm mà bạn muốn thống kê chi phí :" + ColorsMenu.ANSI_RESET);
+        String inputDate = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsExpenseReceiptByDayMonthYear(inputDate);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có chi phí theo " + inputDate + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê chi phí theo:[" + ColorsMenu.PURPLE_BOLD + inputDate + ColorsMenu.ANSI_RESET + "]");
+            String repeated = new String(new char[43]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-20s |\n", "Thời gian", "Chi phí");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listStatistics.forEach(StatisticsForBill::displayStatisticsValuesBill);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
-    public static void statisticsExpenseReceiptByMonthYear() throws SQLException {
-        System.out.println("Thống kê chi phí theo khoảng thời gian là :");
-        String repeated = new String(new char[43]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-20s |\n", "Thời gian", "Chi phí");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsExpenseReceiptByMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+    //2. Thống kê chi phí theo khoảng thời gian
+    public static void statisticsExpenseReceiptByInterval() throws SQLException {
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào khoảng thời gian từ :" + ColorsMenu.ANSI_RESET);
+        String inputDateFrom = validateInputDate();
+        System.out.println(ColorsMenu.PURPLE_BOLD + "Nhập vào khoảng thời gian đến :" + ColorsMenu.ANSI_RESET);
+        String inputDateTo = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsExpenseReceiptByInterval(inputDateFrom, inputDateTo);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có chi phí nào từ  " + inputDateFrom + " đến " + inputDateTo + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê chi phí theo khoảng thời gian từ:" + "[" + ColorsMenu.YELLOW_BOLD + inputDateFrom + ColorsMenu.ANSI_RESET + "]" + " đến " + "[" + ColorsMenu.YELLOW_BOLD + inputDateTo + ColorsMenu.ANSI_RESET + "]" + " là :");
+            String repeated = new String(new char[66]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-20s | %-20s | \n", "Thời gian từ", "Thời gian đến", "Chi phí");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-20s | %-20s | \n", inputDateFrom, inputDateTo, listStatistics.get(0).getStatisticsValues());
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
+
     }
 
+    //3. Thống kê doanh thu theo ngày, tháng, năm
     public static void statisticsRevenueBillByDayMonthYear() throws SQLException {
-        System.out.println("Thống kê doanh thu theo ngày, tháng, năm là :");
-        String repeated = new String(new char[43]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-20s |\n", "Thời gian", "Doanh thu");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsRevenueBillByDayMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào ngày tháng năm mà bạn muốn thống kê doanh thu :" + ColorsMenu.ANSI_RESET);
+        String inputDate = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsRevenueBillByDayMonthYear(inputDate);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có doanh thu theo " + inputDate + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê doanh thu theo:[" + ColorsMenu.PURPLE_BOLD + inputDate + ColorsMenu.ANSI_RESET + "]");
+            String repeated = new String(new char[43]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-20s |\n", "Thời gian", "Chi phí");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listStatistics.forEach(StatisticsForBill::displayStatisticsValuesBill);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
+    //4. Thống kê doanh thu theo khoảng thời gian
     public static void statisticsRevenueBillByMonthYear() throws SQLException {
-        System.out.println("Thống kê doanh thu theo khoảng thời gian là :");
-        String repeated = new String(new char[43]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-20s |\n", "Thời gian", "Doanh thu");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsRevenueBillByMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào khoảng thời gian từ :" + ColorsMenu.ANSI_RESET);
+        String inputDateFrom = validateInputDate();
+        System.out.println(ColorsMenu.PURPLE_BOLD + "Nhập vào khoảng thời gian đến :" + ColorsMenu.ANSI_RESET);
+        String inputDateTo = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsRevenueBillByMonthYear(inputDateFrom, inputDateTo);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có chi phí nào từ  " + inputDateFrom + " đến " + inputDateTo + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê chi phí theo khoảng thời gian từ:" + "[" + ColorsMenu.YELLOW_BOLD + inputDateFrom + ColorsMenu.ANSI_RESET + "]" + " đến " + "[" + ColorsMenu.YELLOW_BOLD + inputDateTo + ColorsMenu.ANSI_RESET + "]" + " là :");
+            String repeated = new String(new char[66]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-20s | %-20s | \n", "Thời gian từ", "Thời gian đến", "Chi phí");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-20s | %-20s | \n", inputDateFrom, inputDateTo, listStatistics.get(0).getStatisticsValues());
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
+    //5. Thống kê số nhân viên theo từng trạng thái
     public static void statisticsEmployeeByEmpStatus() throws SQLException {
         System.out.println("Thống kê số nhân viên theo từng trạng thái là :");
         String repeated = new String(new char[43]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         System.out.printf("| %-20s | %-20s |\n", "Trạng thái", "Số lượng nhân viên");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         ReportBusiness.statisticsEmployeeByEmpStatus();
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
     }
 
+    //6. Thống kê sản phẩm nhập nhiều nhất trong khoảng thời gian
     public static void statisticsMaxReceiptProductByMonthYear() throws SQLException {
-        System.out.println("Thống kê sản phẩm nhập nhiều nhất trong khoảng thời gian là :");
-        String repeated = new String(new char[81]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm", "Số lượng nhập nhiều nhất");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsMaxReceiptProductByMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào khoảng thời gian từ :" + ColorsMenu.ANSI_RESET);
+        String inputDateFrom = validateInputDate();
+        System.out.println(ColorsMenu.PURPLE_BOLD + "Nhập vào khoảng thời gian đến :" + ColorsMenu.ANSI_RESET);
+        String inputDateTo = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsMaxReceiptProductByMonthYear(inputDateFrom, inputDateTo);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có sản phẩm nào nhập nhiều nhất trong khoảng thời gian từ" + inputDateFrom + " đến " + inputDateTo + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê sản phẩm nhập nhiều nhất trong khoảng thời gian từ:" + "[" + ColorsMenu.YELLOW_BOLD + inputDateFrom + ColorsMenu.ANSI_RESET + "]" + " đến " + "[" + ColorsMenu.YELLOW_BOLD + inputDateTo + ColorsMenu.ANSI_RESET + "]" + " là :");
+            String repeated = new String(new char[81]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm nhập nhiều nhất", "Số lượng");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listStatistics.forEach(StatisticsForBill::statisticsMaxAndMinReceiptProductByMonthYear);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
+    //7. Thống kê sản phẩm nhập ít nhất trong khoảng thời gian
     public static void statisticsMinReceiptProductByMonthYear() throws SQLException {
-        System.out.println("Thống kê sản phẩm nhập ít nhất trong khoảng thời gian là :");
-        String repeated = new String(new char[81]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm", "Số lượng nhập ít nhất");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsMinReceiptProductByMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào khoảng thời gian từ :" + ColorsMenu.ANSI_RESET);
+        String inputDateFrom = validateInputDate();
+        System.out.println(ColorsMenu.PURPLE_BOLD + "Nhập vào khoảng thời gian đến :" + ColorsMenu.ANSI_RESET);
+        String inputDateTo = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsMinReceiptProductByMonthYear(inputDateFrom, inputDateTo);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có sản phẩm nào nhập nhiều nhất trong khoảng thời gian từ" + inputDateFrom + " đến " + inputDateTo + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê sản phẩm nhập ít nhất trong khoảng thời gian từ:" + "[" + ColorsMenu.YELLOW_BOLD + inputDateFrom + ColorsMenu.ANSI_RESET + "]" + " đến " + "[" + ColorsMenu.YELLOW_BOLD + inputDateTo + ColorsMenu.ANSI_RESET + "]" + " là :");
+            String repeated = new String(new char[81]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm nhập ít nhất", "Số lượng");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listStatistics.forEach(StatisticsForBill::statisticsMaxAndMinReceiptProductByMonthYear);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
+    //8. Thống kê sản phẩm xuất nhiều nhất trong khoảng thời gian
     public static void statisticsMaxBillProductByMonthYear() throws SQLException {
-        System.out.println("Thống kê sản phẩm nhập ít nhất trong khoảng thời gian là :");
-        String repeated = new String(new char[81]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm", "Số lượng nhập ít nhất");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsMaxBillProductByMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào khoảng thời gian từ :" + ColorsMenu.ANSI_RESET);
+        String inputDateFrom = validateInputDate();
+        System.out.println(ColorsMenu.PURPLE_BOLD + "Nhập vào khoảng thời gian đến :" + ColorsMenu.ANSI_RESET);
+        String inputDateTo = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsMaxBillProductByMonthYear(inputDateFrom, inputDateTo);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có sản phẩm nào xuất nhiều nhất trong khoảng thời gian từ　" + inputDateFrom + " đến " + inputDateTo + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê sản phẩm xuất nhiều nhất trong khoảng thời gian từ:" + "[" + ColorsMenu.YELLOW_BOLD + inputDateFrom + ColorsMenu.ANSI_RESET + "]" + " đến " + "[" + ColorsMenu.YELLOW_BOLD + inputDateTo + ColorsMenu.ANSI_RESET + "]" + " là :");
+
+            String repeated = new String(new char[81]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm xuất nhiều nhất", "Số lượng");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listStatistics.forEach(StatisticsForBill::statisticsMaxAndMinReceiptProductByMonthYear);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
+    //9. Thống kê sản phẩm xuất ít nhất trong khoảng thời gian
     public static void statisticsMinBillProductByMonthYear() throws SQLException {
-        System.out.println("Thống kê sản phẩm nhập ít nhất trong khoảng thời gian là :");
-        String repeated = new String(new char[81]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm", "Số lượng nhập ít nhất");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-        ReportBusiness.statisticsMinBillProductByMonthYear();
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "Nhập vào khoảng thời gian từ :" + ColorsMenu.ANSI_RESET);
+        String inputDateFrom = validateInputDate();
+        System.out.println(ColorsMenu.PURPLE_BOLD + "Nhập vào khoảng thời gian đến :" + ColorsMenu.ANSI_RESET);
+        String inputDateTo = validateInputDate();
+        List<StatisticsForBill> listStatistics = ReportBusiness.statisticsMinBillProductByMonthYear(inputDateFrom, inputDateTo);
+        if (listStatistics.isEmpty()) {
+            System.out.println(ColorsMenu.RED_BOLD + "Không có sản phẩm nào xuất ít nhất trong khoảng thời gian từ　" + inputDateFrom + " đến " + inputDateTo + " mà bạn vừa nhập" + ColorsMenu.ANSI_RESET);
+        } else {
+            System.out.println("Thống kê sản phẩm xuất ít nhất trong khoảng thời gian từ:" + "[" + ColorsMenu.YELLOW_BOLD + inputDateFrom + ColorsMenu.ANSI_RESET + "]" + " đến " + "[" + ColorsMenu.YELLOW_BOLD + inputDateTo + ColorsMenu.ANSI_RESET + "]" + " là :");
+            String repeated = new String(new char[81]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-20s | %-30s | %-25s |\n", "Thời gian", "Tên sản phẩm xuất ít nhất", "Số lượng");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listStatistics.forEach(StatisticsForBill::statisticsMaxAndMinReceiptProductByMonthYear);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        }
     }
 
+    public static String validateInputDate() {
+        while (true) {
+            String validateInputDateStr = sc.nextLine().trim();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            if (validateInputDateStr.isEmpty()) {
+                System.err.println("Ngày mà bạn nhập vào không được để trống, vui lòng nhập lại");
+            } else {
+                try {
+                    sdf.parse(validateInputDateStr);
+                    return validateInputDateStr;
+                } catch (ParseException ex) {
+                    System.err.println("Ngày mà bạn nhập vào không đúng định dạng yyyy-MM-dd, vui lòng nhập lại");
+                } catch (Exception ex2) {
+                    System.err.println("Lỗi hệ thống");
+                }
+            }
+        }
+    }
 
 }

@@ -16,8 +16,6 @@ import static ra.presentation.MainManagement.sc;
 
 public class BillManagement {
     public static final String border = "-";
-    public static final int perPage = 10;
-    public static final int indexOfPage = 10;
     public static List<Bill> listBill = new ArrayList<>();
 
     static void displayBillMenu(String employeeId) throws SQLException {
@@ -42,7 +40,7 @@ public class BillManagement {
                     break;
                 case 2:
                     BillManagement.displayDataBill();
-                    BillManagement.creatDataBill(sc, employeeId);
+                    BillManagement.creatDataBillAdmin(sc, employeeId);
                     break;
                 case 3:
                     listBill = BillBusiness.getAllDataBillByBillStatusOther2();
@@ -51,7 +49,7 @@ public class BillManagement {
                     } else {
                         repeated = new String(new char[179]).replace("\0", border);
                         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên xuất", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
                         System.out.println("* " + repeated + " *");
                         listBill.forEach(Bill::displayDataBill);
                         System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
@@ -63,13 +61,13 @@ public class BillManagement {
                     BillDetailManagement.displayBillDetailForBill();
                     break;
                 case 5:
-                    listBill = BillBusiness.getAllDataBillByBillStatusOther2();
+                    listBill = BillBusiness.getAllDataBillByBillStatus0();
                     if (listBill.isEmpty()) {
                         System.out.println("Không có phiếu xuất nào với trạng thái Tạo hoặc Hủy cả");
                     } else {
                         repeated = new String(new char[179]).replace("\0", border);
                         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên xuất", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
                         System.out.println("* " + repeated + " *");
                         listBill.forEach(Bill::displayDataBill);
                         System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
@@ -111,20 +109,20 @@ public class BillManagement {
     }
 
     public static void displayDataBill() throws SQLException {
-        listBill = BillBusiness.getAllDataBill();
+        List<Bill> listBill = BillBusiness.getAllDataBill();
         if (listBill.isEmpty()) {
             System.out.println("Không có phiếu xuất nào cả");
         } else {
             String repeated = new String(new char[179]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-            System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+            System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên xuất", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
             System.out.println("* " + repeated + " *");
             listBill.forEach(Bill::displayDataBill);
             System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
         }
     }
 
-    public static void creatDataBill(Scanner sc, String employeeId) throws SQLException {
+    public static void creatDataBillAdmin(Scanner sc, String employeeId) throws SQLException {
         System.out.print("Nhập số lượng phiếu xuất mà bạn muốn thêm :");
         while (true) {
             String inputNumberStr = sc.nextLine().trim();
@@ -137,7 +135,48 @@ public class BillManagement {
                         for (int i = 0; i < number; i++) {
                             System.out.println("Nhập vào phiếu xuất thứ " + (i + 1) + ":");
                             Bill billNew = new Bill();
-                            billNew.inputDataBillForBill(employeeId);
+                            billNew.inputDataBillForBillAdmin(employeeId);
+                            boolean result = ReceiptBusiness.creatDataReceipt(billNew);
+                            if (result && number == 1) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu xuất" + ColorsMenu.ANSI_RESET);
+                                long billIdNow = ReceiptBusiness.maxIndex();
+                                BillDetailManagement.creatDataBillDetailForBill(sc, billIdNow);
+                            } else if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu xuất thứ " + (i + 1) + ColorsMenu.ANSI_RESET);
+                                long billIdNow = ReceiptBusiness.maxIndex();
+                                BillDetailManagement.creatDataBillDetailForBill(sc, billIdNow);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                            }
+                        }
+                        break;
+                    } else {
+                        System.err.println("Số lượng phiếu xuất mà bạn muốn thêm phải là số nguyên lớn hơn 0,vui lòng nhập lại");
+                    }
+
+                } catch (NumberFormatException ex) {
+                    System.err.println("Số lượng phiếu xuất mà bạn muốn thêm phải là số,vui lòng nhập lại");
+                } catch (Exception ex3) {
+                    System.err.println("Lỗi hệ thống");
+                }
+
+            }
+        }
+    }
+    public static void creatDataBillUser(Scanner sc, String employeeId) throws SQLException {
+        System.out.print("Nhập số lượng phiếu xuất mà bạn muốn thêm :");
+        while (true) {
+            String inputNumberStr = sc.nextLine().trim();
+            if (inputNumberStr.isEmpty()) {
+                System.err.println("Số lượng phiếu xuất mà bạn muốn thêm không được để trống,vui lòng nhập lại");
+            } else {
+                try {
+                    int number = Integer.parseInt(inputNumberStr);
+                    if (number > 0) {
+                        for (int i = 0; i < number; i++) {
+                            System.out.println("Nhập vào phiếu xuất thứ " + (i + 1) + ":");
+                            Bill billNew = new Bill();
+                            billNew.inputDataBillForBillUser(employeeId);
                             boolean result = ReceiptBusiness.creatDataReceipt(billNew);
                             if (result && number == 1) {
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu xuất" + ColorsMenu.ANSI_RESET);
@@ -172,7 +211,7 @@ public class BillManagement {
         System.out.println("Nhập vào mã phiếu hoặc mã code của phiếu xuất cần cập nhật :");
         String billUpdate = Bill.inputReceiptUpdate();
         Bill bil = BillBusiness.getBillByBillIdOrBillCode(billUpdate);
-        updateUser(bil, billUpdate, isExitUpdateDataBillMenu);
+        updateBillUser(bil, billUpdate, isExitUpdateDataBillMenu);
     }
     public static void updateDataBillUser(Scanner sc) throws SQLException {
         boolean isExitUpdateDataBillMenu = true;
@@ -180,7 +219,7 @@ public class BillManagement {
         System.out.println("Nhập vào mã phiếu hoặc mã code của phiếu xuất cần cập nhật :");
         String billUpdate = Bill.inputReceiptUpdate();
         Bill bil = BillBusiness.getBillByBillIdOrBillCode(billUpdate);
-        updateUser(bil, billUpdate, isExitUpdateDataBillMenu);
+        updateBillUser(bil, billUpdate, isExitUpdateDataBillMenu);
     }
 
     private static void update(Bill bil, String billUpdate, boolean isExitUpdateDataBillMenu) throws SQLException {
@@ -275,7 +314,7 @@ public class BillManagement {
         }
     }
 
-    private static void updateUser(Bill bil, String billUpdate, boolean isExitUpdateDataBillMenu) throws SQLException {
+    private static void updateBillUser(Bill bil, String billUpdate, boolean isExitUpdateDataBillMenu) throws SQLException {
         boolean result;
         if (bil != null) {
             if (bil.getBill_Status() != 2) {
@@ -285,17 +324,17 @@ public class BillManagement {
                         String repeated = new String(new char[69]).replace("\0", border);
                         System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
                         System.out.println("========= Vui lòng lựa chọn danh mục cần cập nhật thông tin =========");
-                        System.out.println("--              1.Mã nhân viên nhập                                --");
+                        System.out.println("--              1.Mã nhân viên xuất                                --");
                         System.out.println("--              2.Ngày tạo                                         --");
                         System.out.println("--              3.Trạng thái                                       --");
-                        System.out.println("--              4.Cập nhật cả chi tiết phiếu nhập của phiếu xuất   --");
+                        System.out.println("--              4.Cập nhật cả chi tiết phiếu xuất của phiếu xuất   --");
                         System.out.println("--              5.Thoát khỏi cập thông tin nhập phiếu xuất         --");
                         System.out.println(repeated + ColorsMenu.ANSI_RESET);
                         System.out.println("Lựa chọn của bạn là :");
                         int choiceUpdate = validateChoiceUpdateBill();
                         switch (choiceUpdate) {
                             case 1:
-                                System.out.println("Bạn muốn thay đổi mã nhân viên nhập" + " từ " + "[" + ColorsMenu.RED_BOLD + bil.getEmp_Id_Created() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                                System.out.println("Bạn muốn thay đổi mã nhân viên xuất" + " từ " + "[" + ColorsMenu.RED_BOLD + bil.getEmp_Id_Created() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                                 bil.setEmp_Id_Created(Bill.inputEmpIdCreated());
                                 result = BillBusiness.updateDataBillForBillUser(bil);
                                 if (result) {
@@ -381,8 +420,8 @@ public class BillManagement {
         if (bil != null) {
             while (isCheckUpdateBillDetail) {
                 System.out.println("Bạn có muốn duyệt không ?");
-                System.out.println("1.Có");
-                System.out.println("2.Không");
+                System.out.println(ColorsMenu.YELLOW_BOLD+"1.Có"+ColorsMenu.ANSI_RESET);
+                System.out.println(ColorsMenu.RED_BOLD+"2.Không"+ColorsMenu.ANSI_RESET);
                 System.out.println("Nhập vào lựa chọn của bạn :");
                 int choice = validateChoiceUpdateBillDetail();
                 switch (choice) {
@@ -437,8 +476,8 @@ public class BillManagement {
         while (isCheckUpdateBillDetail) {
             BillDetailManagement.displayBillDetail(bil);
             System.out.println("Phiếu xuất có cả chi tiết phiếu xuất ,bạn có muốn cập nhật không ?");
-            System.out.println("1.Có");
-            System.out.println("2.Không");
+            System.out.println(ColorsMenu.PURPLE_BOLD+"1.Có"+ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD+"2.Không"+ColorsMenu.ANSI_RESET);
             System.out.println("Nhập vào lựa chọn của bạn :");
             int choice = validateChoiceUpdateBillDetail();
             switch (choice) {
@@ -473,9 +512,8 @@ public class BillManagement {
             listBill.add(bil);
             listBill.forEach(Bill::displayDataBill);
             System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
-            System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
             String repeated2 = new String(new char[69]).replace("\0", border);
-            System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
+            System.out.println(ColorsMenu.PURPLE_BOLD + repeated2);
             System.out.println("=========      Vui lòng lựa chọn danh mục                   =========");
             System.out.println("--              1.Cập nhật phiếu xuất                              --");
             System.out.println("--              2.Duyệt phiếu xuất                                 --");
@@ -487,7 +525,7 @@ public class BillManagement {
                 switch (choiceUpdate) {
                     case 1:
                         if (bil.getBill_Status() != 2) {
-                            updateUser(bil, billUpdate, isCheckSearch);
+                            updateBillUser(bil, billUpdate, isCheckSearch);
                         } else {
                             System.out.println(ColorsMenu.RED_BOLD + "Rất tiếc phiếu xuất này đã được duyệt không thể cập nhật được" + ColorsMenu.ANSI_RESET);
                         }
@@ -521,7 +559,7 @@ public class BillManagement {
         boolean result = false;
         System.out.println("Nhập vào mã phiếu hoặc mã code của phiếu xuất cần cập nhật :");
         String billUpdate = Bill.inputReceiptUpdate();
-        bil = BillBusiness.getBillByBillIdOrBillCode(billUpdate);
+        bil = BillBusiness.getBillByBillIdOrBillCodeUser(employeeId,billUpdate);
         if (bil != null) {
             String repeated = new String(new char[179]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
@@ -545,7 +583,7 @@ public class BillManagement {
                 switch (choiceUpdate) {
                     case 1:
                         if (bil.getBill_Status() != 2) {
-                            updateUser(bil, billUpdate, isCheckSearch);
+                            updateBillUser(bil, billUpdate, isCheckSearch);
                         } else {
                             System.out.println(ColorsMenu.RED_BOLD + "Rất tiếc phiếu xuất này đã được duyệt không thể cập nhật được" + ColorsMenu.ANSI_RESET);
                         }

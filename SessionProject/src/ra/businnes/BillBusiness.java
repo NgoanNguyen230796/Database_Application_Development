@@ -173,6 +173,37 @@ public class BillBusiness {
         return bil;
     }
 
+    public static Bill getBillByBillIdOrBillCodeUser(String employeeId,String inputBill) throws SQLException {
+        Bill bil = null;
+        Connection conn = null;
+        CallableStatement callSt = null;
+        try {
+            conn = ConnectDB.openConnection();
+            callSt = conn.prepareCall("{call get_data_bill_by_billType_or_billCodeUser(?,?)}");
+            //set giá trị tham số vào
+            callSt.setString(1, employeeId);
+            callSt.setString(2, inputBill);
+            //Thực hiện gọi procedure
+            ResultSet rs = callSt.executeQuery();
+            //Lấy dữ liệu rs đẩy vào đối tượng product trả về
+            while (rs.next()) {
+                bil = new Bill();
+                bil.setBill_Id(rs.getLong("bill_Id"));
+                bil.setBill_Code(rs.getString("bill_Code"));
+                bil.setBill_Type(rs.getBoolean("bill_Type"));
+                bil.setEmp_Id_Created(rs.getString("emp_Id_Created"));
+                bil.setCreated_Bill(String.valueOf(rs.getDate("created")));
+                bil.setEmp_Id_Auth(rs.getString("emp_Id_Auth"));
+                bil.setAuth_Date(String.valueOf(rs.getDate("auth_Date")));
+                bil.setBill_Status(rs.getShort("bill_Status"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectDB.closeConnection(conn, callSt);
+        }
+        return bil;
+    }
     public static Bill getBillByBillIdOrBillCodeAndBillStatus0(String inputBill) throws SQLException {
         Bill bil = null;
         Connection conn = null;
@@ -286,7 +317,7 @@ public class BillBusiness {
         try {
             conn = ConnectDB.openConnection();
             callSt = conn.prepareCall("{call update_data_BillUser(?,?,?,?)}");
-            callSt.setLong(1,bil.getBill_Id());
+            callSt.setLong(1, bil.getBill_Id());
             callSt.setString(2, bil.getEmp_Id_Created());
             callSt.setString(3, bil.getCreated_Bill());
             callSt.setShort(4, bil.getBill_Status());
@@ -303,7 +334,7 @@ public class BillBusiness {
         return result;
     }
 
-//    public static void isCheckApproveBill(long billUpdate) throws SQLException {
+    //    public static void isCheckApproveBill(long billUpdate) throws SQLException {
 //        Connection conn = null;
 //        CallableStatement callSt = null;
 //        boolean result = false;
@@ -334,12 +365,12 @@ public class BillBusiness {
             callSt.setLong(1, bil.getBill_Id());
             callSt.setString(2, bil.getEmp_Id_Auth());
             callSt.setString(3, String.valueOf(bil.getAuth_Date()));
-            callSt.registerOutParameter(4, Types.DECIMAL );
+            callSt.registerOutParameter(4, Types.VARCHAR);
             // đăng ký kiểu dữ liệu cho tham số trả ra--->k có dữ liệu trả ra
             // Thực hiện gọi procrdue
             callSt.executeUpdate();
-            String message=callSt.getString(4);
-            System.out.println(ColorsMenu.YELLOW_BOLD+message+ColorsMenu.ANSI_RESET);
+            String message = callSt.getString(4);
+            System.out.println(ColorsMenu.YELLOW_BOLD + message + ColorsMenu.ANSI_RESET);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

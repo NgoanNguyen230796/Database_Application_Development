@@ -27,6 +27,7 @@ public class ReportBusinnes {
                 categoryStatus = rs.getBoolean("catalogStatus");
                 String valueCategoryStatus = categoryStatus ? "Active" : "InActive";
                 cntCategories = rs.getInt("countByCatalogStatus");
+
                 System.out.printf("%-40s%-20d\n", valueCategoryStatus, cntCategories);
 
             }

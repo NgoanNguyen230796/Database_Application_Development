@@ -44,7 +44,7 @@ create table Account
 
 insert into Account(user_Name, password, permission, emp_Id, acc_Status)
 VALUES ('user1', '891011', 1, 'NV009', 1),
-('admin1', '1235698', 0, 'NV009', 1);
+       ('admin1', '1235698', 0, 'NV009', 1);
 
 create table Bill
 (
@@ -112,7 +112,6 @@ BEGIN
     from Product pr;
 end //
 DELIMITER ;
-
 
 
 -- get data in table Product by_productId
@@ -638,12 +637,13 @@ create procedure creat_data_receipt(
     in input_bill_Type bit,
     in input_emp_Id_Created char(5),
     in input_emp_Id_Auth char(5),
-    in input_auth_Date      date,
+    in input_auth_Date date,
     in input_bill_Status smallint
 )
 BEGIN
-    insert into Bill(bill_Code, bill_Type, emp_Id_Created, emp_Id_Auth,auth_Date, bill_Status)
-    VALUES (input_bill_Code, input_bill_Type, input_emp_Id_Created, input_emp_Id_Auth,input_auth_Date, input_bill_Status);
+    insert into Bill(bill_Code, bill_Type, emp_Id_Created, emp_Id_Auth, auth_Date, bill_Status)
+    VALUES (input_bill_Code, input_bill_Type, input_emp_Id_Created, input_emp_Id_Auth, input_auth_Date,
+            input_bill_Status);
 end //
 DELIMITER ;
 
@@ -669,15 +669,33 @@ BEGIN
     FROM Bill
     WHERE bill_Type = true
       AND bill_Id = input_bill_Id_or_bill_Code
-
     UNION
-
     SELECT *
     FROM Bill
     WHERE bill_Type = true
       AND bill_Code = input_bill_Id_or_bill_Code;
 end //
 DELIMITER ;
+
+DELIMITER //
+create procedure get_data_by_billType_or_billCodeUser(in input_employeeId varchar(10),
+                                                      in input_bill_Id_or_bill_Code varchar(10))
+BEGIN
+    SELECT *
+    FROM Bill bi
+    WHERE bi.bill_Type = true
+      AND bi.bill_Id = input_bill_Id_or_bill_Code
+      and bi.emp_Id_Created = input_employeeId
+    UNION
+    SELECT *
+    FROM Bill bi
+    WHERE bi.bill_Type = true
+      AND bi.bill_Code = input_bill_Id_or_bill_Code
+      and bi.emp_Id_Created = input_employeeId;
+end //
+DELIMITER ;
+call get_data_by_billType_or_billCodeUser('NV004', '50');
+
 -- 3.2 Cập nhật thông tin phiếu xuất
 DELIMITER //
 create procedure get_data_bill_by_billType_or_billCode(in input_bill_Id_or_bill_Code varchar(10))
@@ -693,6 +711,23 @@ BEGIN
     FROM Bill
     WHERE bill_Type = false
       AND bill_Code = input_bill_Id_or_bill_Code;
+end //
+DELIMITER ;
+DELIMITER //
+create procedure get_data_bill_by_billType_or_billCodeUser(in input_employeeId varchar(10),
+                                                          in input_bill_Id_or_bill_Code varchar(10))
+BEGIN
+    SELECT *
+    FROM Bill bi
+    WHERE bi.bill_Type = false
+      AND bi.bill_Id = input_bill_Id_or_bill_Code
+      and bi.emp_Id_Created = input_employeeId
+    UNION
+    SELECT *
+    FROM Bill bi
+    WHERE bi.bill_Type = false
+      AND bi.bill_Code = input_bill_Id_or_bill_Code
+      and bi.emp_Id_Created = input_employeeId;
 end //
 DELIMITER ;
 -- Lấy thông tin của phiếu nhập với điều kiện là các trạng thái tạo,bil.bill_Type = true v tìm theo mã hoặc mã code của phiếu nhập
@@ -852,7 +887,7 @@ create procedure get_all_data_billDetail_by_receipt(
     in input_bill_Id bigint
 )
 BEGIN
-    select biDet.*,bil.bill_Code as 'billCode'
+    select biDet.*, bil.bill_Code as 'billCode'
     from Bill_Detail biDet
              join Bill bil on biDet.bill_Id = bil.bill_Id
     where biDet.bill_Id = input_bill_Id;
@@ -876,7 +911,7 @@ VALUES (1, 'SP009', 22, 110000),
 DELIMITER //
 create procedure get_data_Bill_Detail_By_Bill_Type1()
 BEGIN
-    select biDet.*
+    select biDet.*, bil.bill_Code as 'billCode'
     from Bill_Detail biDet
              join Bill bil on biDet.bill_Id = bil.bill_Id
     where bil.bill_Type = true;
@@ -886,7 +921,7 @@ DELIMITER ;
 DELIMITER //
 create procedure get_data_Bill_By_Bill_Type1()
 BEGIN
-    select biDet.*,bil.bill_Code as 'billCode'
+    select biDet.*, bil.bill_Code as 'billCode'
     from Bill_Detail biDet
              join Bill bil on biDet.bill_Id = bil.bill_Id
     where bil.bill_Type = false;
@@ -966,7 +1001,8 @@ DELIMITER //
 create procedure get_all_data_product_for_billDetail()
 BEGIN
     select *
-    from Product;
+    from Product pr
+    where pr.product_Status = true;
 end //
 DELIMITER ;
 
@@ -988,53 +1024,61 @@ BEGIN
         update Bill bil
             inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
             inner join Product pr on billDetail.product_Id = pr.product_Id
+            inner join (select billDetail.product_Id, sum(billDetail.quantity) as sumQuantity
+                        from Bill bil
+                                 inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
+                                 inner join Product pr on billDetail.product_Id = pr.product_Id
+                        where bil.bill_Id = input_bill_Id
+                        group by billDetail.product_Id) as sumQuantityBill on pr.product_Id = sumQuantityBill.product_Id
         set bil.bill_Status=2,
             bil.emp_Id_Auth=input_emp_Id_Auth,
             bil.auth_Date=input_auth_Date,
-            pr.quantity= pr.quantity + billDetail.quantity
+            pr.quantity= pr.quantity + sumQuantity
         where bil.bill_Id = input_bill_Id;
     end if;
 end //
 DELIMITER ;
 
 
+# DELIMITER //
+# CREATE PROCEDURE isCheckApproveBill(
+#     IN input_bill_Id BIGINT,
+#     IN input_emp_Id_Auth CHAR(5),
+#     IN input_auth_Date DATE,
+#     OUT error_message VARCHAR(200)
+# )
+# BEGIN
+#     DECLARE isCheckBillStatus SMALLINT;
+#     DECLARE isCheckBillQuantity SMALLINT;
+#
+#     SELECT bil.bill_Status INTO isCheckBillStatus
+#     FROM Bill bil
+#     WHERE bil.bill_Type = FALSE
+#       AND bil.bill_Id = input_bill_Id
+#       AND bil.bill_Status = 0;
+#
+#
+#     IF (isCheckBillStatus = 0) THEN
+#         UPDATE Bill bil
+#             INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+#             INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+#         SET bil.bill_Status = 2,
+#             bil.emp_Id_Auth = input_emp_Id_Auth,
+#             bil.auth_Date = input_auth_Date,
+#
+#                 IF(pr.quantity>=billDetail.quantity)then
+#             pr.quantity =pr.quantity-billDetail.quantity
+#         SET error_message = 'Đủ số lượng tồn kho để xuất và đã duyệt thành công phiếu xuất';
+#         else
+#             SET error_message = 'Không đủ số lượng tồn kho để xuất hàng';
+#         end if;
+#         WHERE bil.bill_Id = input_bill_Id;
+#     END IF;
+# END //
+# DELIMITER ;
+
 DELIMITER //
-create procedure isCheckApproveBill(
-    in input_bill_Id bigint,
-    out MESSAGE_TEXT varchar(200)
-)
-BEGIN
-    DECLARE isCheckBillStatus smallint;
-    DECLARE isCheckBillQuantity smallint;
-    set isCheckBillStatus = (select bil.bill_Status
-                             from Bill bil
-                             where bil.bill_Type = false
-                               and bil.bill_Id = input_bill_Id
-                               and bil.bill_Status = 0);
-
-    set isCheckBillQuantity = (select (pr.quantity - billDetail.quantity)
-                               from Bill bil
-                                        inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
-                                        inner join Product pr on billDetail.product_Id = pr.product_Id
-                               where bil.bill_Id = input_bill_Id);
-    if (isCheckBillStatus = 0 and isCheckBillQuantity > 0) then
-        Set MESSAGE_TEXT = 'Đủ số lượng tồn kho để xuất hàng';
-    else
-        set MESSAGE_TEXT = 'Không đủ số lượng tồn kho để xuất hàng';
-    end if;
-end //
-DELIMITER ;
-
-select billDetail.product_Id,sum(billDetail.quantity)
-from Bill bil
-         inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
-         inner join Product pr on billDetail.product_Id = pr.product_Id
-where bil.bill_Id=7
-group by billDetail.product_Id;
-
--- Duyệt phiếu xuất
-DELIMITER //
-create procedure approveBill(
+CREATE PROCEDURE isCheckApproveBill(
     in input_bill_Id bigint,
     in input_emp_Id_Auth char(5),
     in input_auth_Date date,
@@ -1049,12 +1093,16 @@ BEGIN
                                and bil.bill_Id = input_bill_Id
                                and bil.bill_Status = 0);
 
-    set isCheckBillQuantity = (select (pr.quantity - billDetail.quantity)
-                               from Bill bil
-                                        inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
-                                        inner join Product pr on billDetail.product_Id = pr.product_Id
-                               where bil.bill_Id = input_bill_Id);
-    if (isCheckBillStatus = 0 and isCheckBillQuantity > 0) then
+    set isCheckBillQuantity = (select (pr.quantity - sumQuantityBill.sumQuantity), pr.product_Id
+                               from Product pr
+                                        inner join (select billDetail.product_Id, sum(billDetail.quantity) as sumQuantity
+                                                    from Bill bil
+                                                             inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
+                                                             inner join Product pr on billDetail.product_Id = pr.product_Id
+                                                    where bil.bill_Id = input_bill_Id
+                                                    group by billDetail.product_Id) as sumQuantityBill
+                                                   on pr.product_Id = sumQuantityBill.product_Id);
+    if (isCheckBillStatus = 0) then
         update Bill bil
             inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
             inner join Product pr on billDetail.product_Id = pr.product_Id
@@ -1070,57 +1118,205 @@ BEGIN
 end //
 DELIMITER ;
 
+
+-- ---------------------------------------------------------------------------------------------------
+select billDetail.product_Id, sum(billDetail.quantity)
+from Bill bil
+         inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
+         inner join Product pr on billDetail.product_Id = pr.product_Id
+where bil.bill_Id = 24
+group by billDetail.product_Id;
+-- ---------------------------------------------------------------------------------------------------
+-- Duyệt phiếu xuất
+# DELIMITER //
+# CREATE PROCEDURE approveBill(
+#     IN input_bill_Id BIGINT,
+#     IN input_emp_Id_Auth CHAR(5),
+#     IN input_auth_Date DATE,
+#     OUT MESSAGE_TEXT VARCHAR(200)
+# )
+# BEGIN
+#     DECLARE isCheckBillStatus SMALLINT;
+#     DECLARE isCheckBillQuantity SMALLINT;
+#
+#     SET isCheckBillStatus = (SELECT bil.bill_Status
+#                              FROM Bill bil
+#                              WHERE bil.bill_Type = FALSE
+#                                AND bil.bill_Id = input_bill_Id
+#                                AND bil.bill_Status = 0);
+#
+#     SET isCheckBillQuantity = (SELECT (pr.quantity - billDetail.quantity)
+#                                FROM Bill bil
+#                                         INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+#                                         INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+#                                WHERE bil.bill_Id = input_bill_Id);
+#
+#     IF (isCheckBillStatus = 0) THEN
+#             UPDATE Bill bil
+#                 INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+#                 INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+#                 INNER JOIN (SELECT billDetail.product_Id, SUM(billDetail.quantity) AS sumQuantity
+#                             FROM Bill bil
+#                                      INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+#                                      INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+#                             WHERE bil.bill_Id = input_bill_Id
+#                             GROUP BY billDetail.product_Id) AS sumQuantityBill ON pr.product_Id = sumQuantityBill.product_Id
+#             SET bil.bill_Status = 2,
+#                 bil.emp_Id_Auth = input_emp_Id_Auth,
+#                 bil.auth_Date = input_auth_Date,
+#                 pr.quantity = if(pr.quantity>sumQuantityBill.sumQuantity,pr.quantity-sumQuantityBill.sumQuantity  SET MESSAGE_TEXT = 'Đủ số lượng tồn kho để xuất và đã duyệt thành công phiếu xuất', SET MESSAGE_TEXT = 'Không đủ số lượng tồn kho để xuất hàng');
+#             WHERE bil.bill_Id = input_bill_Id;
+#
+#     END IF;
+# END //
+# DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE approveBill(
+    IN input_bill_Id BIGINT,
+    IN input_emp_Id_Auth CHAR(5),
+    IN input_auth_Date DATE,
+    OUT MESSAGE_TEXT VARCHAR(500)
+)
+BEGIN
+    DECLARE isCheckBillStatus SMALLINT;
+    DECLARE isCheckBillQuantity SMALLINT;
+    SET isCheckBillStatus = (SELECT bil.bill_Status
+                             FROM Bill bil
+                             WHERE bil.bill_Type = FALSE
+                               AND bil.bill_Id = input_bill_Id
+                               AND bil.bill_Status = 0);
+    set isCheckBillQuantity = (SELECT NOT EXISTS(SELECT 1
+                                                 FROM Bill bil
+                                                          INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+                                                          INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+                                                 WHERE bil.bill_Id = input_bill_Id
+                                                   and pr.quantity < billDetail.quantity));
+
+    IF (isCheckBillStatus = 0) THEN
+        IF isCheckBillQuantity THEN
+            UPDATE Bill bil
+                INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+                INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+                INNER JOIN (SELECT billDetail.product_Id, SUM(billDetail.quantity) AS sumQuantity
+                            FROM Bill bil
+                                     INNER JOIN Bill_Detail billDetail ON bil.bill_Id = billDetail.bill_Id
+                                     INNER JOIN Product pr ON billDetail.product_Id = pr.product_Id
+                            WHERE bil.bill_Id = input_bill_Id
+                            GROUP BY billDetail.product_Id) AS sumQuantityBill ON pr.product_Id = sumQuantityBill.product_Id
+            SET bil.bill_Status = 2,
+                bil.emp_Id_Auth = input_emp_Id_Auth,
+                bil.auth_Date   = input_auth_Date,
+                pr.quantity     = pr.quantity - sumQuantityBill.sumQuantity
+            WHERE bil.bill_Id = input_bill_Id;
+            Set MESSAGE_TEXT = 'Đủ số lượng tồn kho để xuất và đã duyệt thành công phiếu xuất';
+        ELSE
+            set MESSAGE_TEXT = 'Không đủ số lượng tồn kho để xuất hàng';
+        END IF;
+    END IF;
+END //
+DELIMITER ;
+
+
+-- Duyệt phiếu xuất
+DELIMITER //
+create procedure approveBill(
+    in input_bill_Id bigint,
+    in input_emp_Id_Auth char(5),
+    in input_auth_Date date,
+    out MESSAGE_TEXT varchar(200)
+)
+BEGIN
+    DECLARE isCheckBillStatus smallint;
+    DECLARE @MESSAGE_TEXT VARCHAR(200);
+    set isCheckBillStatus = (select bil.bill_Status
+                             from Bill bil
+                             where bil.bill_Type = false
+                               and bil.bill_Id = input_bill_Id
+                               and bil.bill_Status = 0);
+
+    if (isCheckBillStatus = 0) then
+        update Bill bil
+            inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
+            inner join Product pr on billDetail.product_Id = pr.product_Id
+            inner join (select billDetail.product_Id, sum(billDetail.quantity) as sumQuantity
+                        from Bill bil
+                                 inner join Bill_Detail billDetail on bil.bill_Id = billDetail.bill_Id
+                                 inner join Product pr on billDetail.product_Id = pr.product_Id
+                        where bil.bill_Id = input_bill_Id
+                        group by billDetail.product_Id) as sumQuantityBill on pr.product_Id = sumQuantityBill.product_Id
+        set bil.bill_Status=2,
+            bil.emp_Id_Auth=input_emp_Id_Auth,
+            bil.auth_Date=input_auth_Date,
+            pr.quantity= if(pr.quantity > sumQuantityBill.sumQuantity, pr.quantity - sumQuantityBill.sumQuantity)
+        where bil.bill_Id = input_bill_Id;
+        Set MESSAGE_TEXT = 'Đủ số lượng tồn kho để xuất và đã duyệt thành công phiếu xuất';
+    else
+        set MESSAGE_TEXT = 'Không đủ số lượng tồn kho để xuất hàng';
+    end if;
+end //
+DELIMITER ;
+
+
 -- 1. Thống kê chi phí(theo phiếu nhập) theo ngày, tháng, năm
 DELIMITER //
-create procedure statistics_expense_receipt_by_day_month_year()
+create procedure statistics_expense_receipt_by_day_month_year(in input_Date varchar(100))
 BEGIN
-    select bill.bill_Status, bill.auth_Date, sum(billDetail.quantity * billDetail.price) as 'sumReceipt'
+    select bill.bill_Status, bill.auth_Date, SUM(billDetail.quantity * billDetail.price) as 'sumReceipt'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
     where bill.bill_Type = true
       and bill.bill_Status = 2
+      and bill.auth_Date = input_Date
     group by bill.auth_Date;
 end //
 DELIMITER ;
+call statistics_expense_receipt_by_day_month_year('2023-10-10');
+
+call statistics_expense_receipt_by_day_month_year('2023-10-5');
+
 -- 2. Thống kê chi phí(theo phiếu nhập) theo khoảng thời gian theo tháng và năm
 
 DELIMITER //
-create procedure statistics_expense_receipt_by_month_year()
+create procedure statistics_expense_receipt_by_Interval(in input_DateFrom varchar(100), in input_DateTo varchar(100))
 BEGIN
     select bill.bill_Status,
-           CONCAT(YEAR(bill.auth_Date), '-', MONTH(bill.auth_Date)) as 'monthYear',
-           sum(billDetail.quantity * billDetail.price)              as 'sumReceipt'
+           sum(billDetail.quantity * billDetail.price) as 'sumReceipt'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
     where bill.bill_Type = true
       and bill.bill_Status = 2
-    group by monthYear;
+      and bill.auth_Date between input_DateFrom and input_DateTo;
 end //
 DELIMITER ;
+
+call statistics_expense_receipt_by_Interval('2023-5-1', '2023-10-30');
 -- 3. Thống kê doanh thu theo ngày, tháng, năm
 DELIMITER //
-create procedure statistics_revenue_bill_by_day_month_year()
+create procedure statistics_revenue_bill_by_day_month_year(in input_Date varchar(100))
 BEGIN
     select bill.bill_Status, bill.auth_Date, sum(billDetail.quantity * billDetail.price) as 'revenueBillByDayMonthYear'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
     where bill.bill_Type = false
       and bill.bill_Status = 2
+      and bill.auth_Date = input_Date
     group by bill.auth_Date;
 end //
 DELIMITER ;
 -- 4. Thống kê doanh thu theo  khoảng thời gian tháng và năm
 DELIMITER //
-create procedure statistics_revenue_bill_by_month_year()
+create procedure statistics_revenue_bill_by_Interval(in input_DateFrom varchar(100), in input_DateTo varchar(100))
 BEGIN
     select bill.bill_Status,
-           CONCAT(YEAR(bill.auth_Date), '-', MONTH(bill.auth_Date)) as 'monthYear',
-           sum(billDetail.quantity * billDetail.price)              as 'revenueBillByMonthYear'
+           bill.auth_Date                              as 'receiptInterval',
+           sum(billDetail.quantity * billDetail.price) as 'revenueBillByMonthYear'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
     where bill.bill_Type = false
       and bill.bill_Status = 2
-    group by monthYear;
+      and bill.auth_Date between input_DateFrom and input_DateTo
+    group by bill.auth_Date;
 end //
 DELIMITER ;
 
@@ -1136,73 +1332,76 @@ DELIMITER ;
 
 -- 6. Thống kê sản phẩm nhập nhiều nhất trong khoảng thời gian
 DELIMITER //
-create procedure statistics_max_receipt_product_by_month_year()
+create procedure statistics_max_receipt_product_by_month_year(in input_DateFrom varchar(100), in input_DateTo varchar(100))
 BEGIN
-    select CONCAT(YEAR(bill.auth_Date), '-', MONTH(bill.auth_Date)) as 'monthYear',
+    select bill.auth_Date           as 'monthYear',
            pr.product_Name,
-           COUNT(pr.product_Name)                                   as 'cntMaxReceipt'
+           sum(billDetail.quantity) as 'cntMaxReceipt'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
              join Product pr on billDetail.product_Id = pr.product_Id
     where bill.bill_Type = true
       and bill.bill_Status = 2
-    group by monthYear, pr.product_Name
-    having COUNT(pr.product_Name) >= all (select COUNT(pr.product_Name)
-                                          from Bill bill
-                                                   join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
-                                                   join Product pr on billDetail.product_Id = pr.product_Id
-                                          where bill.bill_Type = true
-                                            and bill.bill_Status = 2
-                                          group by pr.product_Name);
-
+      and bill.auth_Date between input_DateFrom and input_DateTo
+    group by bill.auth_Date, pr.product_Name
+    having SUM(billDetail.quantity) >= all (select SUM(billDetail.quantity)
+                                            from Bill bill
+                                                     join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
+                                                     join Product pr on billDetail.product_Id = pr.product_Id
+                                            where bill.bill_Type = true
+                                              and bill.bill_Status = 2
+                                            group by billDetail.product_Id);
 end //
 DELIMITER ;
+
 
 -- 7. Thống kê sản phẩm nhập ít nhất trong khoảng thời gian
 
 DELIMITER //
-create procedure statistics_min_receipt_product_by_month_year()
+create procedure statistics_min_receipt_product_by_month_year(in input_DateFrom varchar(100), in input_DateTo varchar(100))
 BEGIN
-    select CONCAT(YEAR(bill.auth_Date), '-', MONTH(bill.auth_Date)) as 'monthYear',
+    select bill.auth_Date           as 'monthYear',
            pr.product_Name,
-           COUNT(pr.product_Name)                                   as 'cntMinReceipt'
+           sum(billDetail.quantity) as 'cntMaxReceipt'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
              join Product pr on billDetail.product_Id = pr.product_Id
     where bill.bill_Type = true
       and bill.bill_Status = 2
-    group by monthYear, pr.product_Name
-    having COUNT(pr.product_Name) <= all (select COUNT(pr.product_Name)
-                                          from Bill bill
-                                                   join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
-                                                   join Product pr on billDetail.product_Id = pr.product_Id
-                                          where bill.bill_Type = true
-                                            and bill.bill_Status = 2
-                                          group by pr.product_Name);
+      and bill.auth_Date between input_DateFrom and input_DateTo
+    group by bill.auth_Date, pr.product_Name
+    having SUM(billDetail.quantity) <= all (select SUM(billDetail.quantity)
+                                            from Bill bill
+                                                     join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
+                                                     join Product pr on billDetail.product_Id = pr.product_Id
+                                            where bill.bill_Type = true
+                                              and bill.bill_Status = 2
+                                            group by billDetail.product_Id);
 
 end //
 DELIMITER ;
 
 -- 8. Thống kê sản phẩm xuất nhiều nhất trong khoảng thời gian
 DELIMITER //
-create procedure statistics_max_bill_product_by_month_year()
+create procedure statistics_max_bill_product_by_month_year(in input_DateFrom varchar(100), in input_DateTo varchar(100))
 BEGIN
-    select CONCAT(YEAR(bill.auth_Date), '-', MONTH(bill.auth_Date)) as 'monthYear',
+    select bill.auth_Date           as 'monthYear',
            pr.product_Name,
-           COUNT(pr.product_Name)                                   as 'cntMaxBill'
+           sum(billDetail.quantity) as 'cntMaxBill'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
              join Product pr on billDetail.product_Id = pr.product_Id
     where bill.bill_Type = false
       and bill.bill_Status = 2
-    group by monthYear, pr.product_Name
-    having COUNT(pr.product_Name) >= all (select COUNT(pr.product_Name)
-                                          from Bill bill
-                                                   join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
-                                                   join Product pr on billDetail.product_Id = pr.product_Id
-                                          where bill.bill_Type = false
-                                            and bill.bill_Status = 2
-                                          group by pr.product_Name);
+      and bill.auth_Date between input_DateFrom and input_DateTo
+    group by bill.auth_Date, pr.product_Name
+    having SUM(billDetail.quantity) >= all (select SUM(billDetail.quantity)
+                                            from Bill bill
+                                                     join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
+                                                     join Product pr on billDetail.product_Id = pr.product_Id
+                                            where bill.bill_Type = false
+                                              and bill.bill_Status = 2
+                                            group by billDetail.product_Id);
 
 end //
 DELIMITER ;
@@ -1210,24 +1409,25 @@ DELIMITER ;
 -- 9. Thống kê sản phẩm xuất ít nhất trong khoảng thời gian
 
 DELIMITER //
-create procedure statistics_min_bill_product_by_month_year()
+create procedure statistics_min_bill_product_by_month_year(in input_DateFrom varchar(100), in input_DateTo varchar(100))
 BEGIN
-    select CONCAT(YEAR(bill.auth_Date), '-', MONTH(bill.auth_Date)) as 'monthYear',
+    select bill.auth_Date           as 'monthYear',
            pr.product_Name,
-           COUNT(pr.product_Name)                                   as 'cntMinBill'
+           sum(billDetail.quantity) as 'cntMinBill'
     from Bill bill
              join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
              join Product pr on billDetail.product_Id = pr.product_Id
     where bill.bill_Type = false
       and bill.bill_Status = 2
-    group by monthYear, pr.product_Name
-    having COUNT(pr.product_Name) <= all (select COUNT(pr.product_Name)
-                                          from Bill bill
-                                                   join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
-                                                   join Product pr on billDetail.product_Id = pr.product_Id
-                                          where bill.bill_Type = false
-                                            and bill.bill_Status = 2
-                                          group by pr.product_Name);
+      and bill.auth_Date between input_DateFrom and input_DateTo
+    group by bill.auth_Date, pr.product_Name
+    having SUM(billDetail.quantity) <= all (select SUM(billDetail.quantity)
+                                            from Bill bill
+                                                     join Bill_Detail billDetail on bill.bill_Id = billDetail.bill_Id
+                                                     join Product pr on billDetail.product_Id = pr.product_Id
+                                            where bill.bill_Type = false
+                                              and bill.bill_Status = 2
+                                            group by billDetail.product_Id);
 
 end //
 DELIMITER ;
@@ -1272,10 +1472,22 @@ create procedure isCheckProductNameInBillDetail(
 BEGIN
     select billDetail.product_Id
     from Bill_Detail billDetail
-    where billDetail.product_Id=input_Bill_Id;
+    where billDetail.product_Id = input_Bill_Id;
 end //
 DELIMITER ;
 call isCheckProductNameInBillDetail(7);
+
+-- count productId in table Employee
+DELIMITER //
+create procedure get_count_all_data_receipt(
+)
+BEGIN
+    select bil.*, count(bil.bill_Id) as 'cntReceipt'
+    from Bill bil
+    where bil.bill_Type = true
+    group by bil.bill_Id;
+end //
+DELIMITER ;
 
 
 

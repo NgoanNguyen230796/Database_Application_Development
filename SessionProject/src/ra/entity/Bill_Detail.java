@@ -3,11 +3,14 @@ package ra.entity;
 import ra.businnes.ProductBusiness;
 import ra.businnes.ReceiptBusiness;
 import ra.colors.ColorsMenu;
+import ra.presentation.EmployeeManagement;
+import ra.presentation.ProductManagement;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
+import static ra.Choice.ProductChoice.DisplayInReceipt;
 import static ra.presentation.MainManagement.sc;
 
 public class Bill_Detail {
@@ -77,6 +80,14 @@ public class Bill_Detail {
         System.out.print("Nhập vào giá nhập = ");
         this.price = inputPrice();
     }
+    public void inputDataBillDetailForBill(long billDetailId) throws SQLException {
+        this.bill_Id = billDetailId;
+        this.product_Id = inputProductId();
+        System.out.print("Nhập vào số lượng xuất = ");
+        this.quantity = inputQuantity();
+        System.out.print("Nhập vào giá xuất = ");
+        this.price = inputPrice();
+    }
 
     public static long inputBillDetailId() {
         while (true) {
@@ -101,87 +112,88 @@ public class Bill_Detail {
     public static String inputProductId() throws SQLException {
         while (true) {
             List<Product> listProduct = ProductBusiness.getAllDataProductForBillDetail();
-                try {
-                    String repeated = new String(new char[20]).replace("\0", border);
-                    System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " MENU MÃ SẢN PHẨM" + repeated + "----" + " *" + ColorsMenu.ANSI_RESET);
-                    for (int i = 0; i < listProduct.size(); i++) {
-                        System.out.println(ColorsMenu.BLUE_BOLD + (i + 1) + " . " + listProduct.get(i).getProduct_Id() + ColorsMenu.ANSI_RESET);
-                    }
-                    System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + repeated + repeated + "---" + " *" + ColorsMenu.ANSI_RESET);
-                    System.out.print("Vui lòng chọn mã sản phẩm :");
-                    while (true) {
-                        String inputChoiceNumberStr = sc.nextLine().trim();
-                        if (inputChoiceNumberStr.isEmpty()) {
-                            System.err.println("Lựa chọn không được để trống,vui lòng nhập lại");
-                        } else {
-                            try {
-                                int choiceNumber = Integer.parseInt(inputChoiceNumberStr);
-                                if (listProduct.size() == 1 && choiceNumber > 1) {
-                                    System.err.println("Lựa chọn phải thuộc danh mục,vui lòng nhập lại");
-                                } else if (choiceNumber > listProduct.size()) {
-                                    System.err.println("Lựa chọn phải từ 1 đến " + listProduct.size() + ",vui lòng nhập lại");
-                                } else if (choiceNumber > 0) {
-                                    return listProduct.get(choiceNumber - 1).getProduct_Id();
-                                } else {
-                                    System.err.println("Lựa chọn phải là số nguyên lớn hơn 0,vui lòng nhập lại");
-                                }
-                            } catch (NumberFormatException ex) {
-                                System.err.println("Lựa chọn phải là số,vui lòng nhập lại");
-                            } catch (Exception ex2) {
-                                System.err.println("Lỗi hệ thống");
+            try {
+                String repeated = new String(new char[20]).replace("\0", border);
+                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " MENU MÃ SẢN PHẨM" + repeated + "----" + " *" + ColorsMenu.ANSI_RESET);
+                for (int i = 0; i < listProduct.size(); i++) {
+                    System.out.println(ColorsMenu.BLUE_BOLD + (i + 1) + " . " + listProduct.get(i).getProduct_Id() + ColorsMenu.ANSI_RESET);
+                }
+//                    ProductManagement.displayDataProduct(DisplayInReceipt);
+                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + repeated + repeated + "---" + " *" + ColorsMenu.ANSI_RESET);
+                System.out.print("Vui lòng chọn mã sản phẩm :");
+                while (true) {
+                    String inputChoiceNumberStr = sc.nextLine().trim();
+                    if (inputChoiceNumberStr.isEmpty()) {
+                        System.err.println("Lựa chọn không được để trống,vui lòng nhập lại");
+                    } else {
+                        try {
+                            int choiceNumber = Integer.parseInt(inputChoiceNumberStr);
+                            if (listProduct.size() == 1 && choiceNumber > 1) {
+                                System.err.println("Lựa chọn phải thuộc danh mục,vui lòng nhập lại");
+                            } else if (choiceNumber > listProduct.size()) {
+                                System.err.println("Lựa chọn phải từ 1 đến " + listProduct.size() + ",vui lòng nhập lại");
+                            } else if (choiceNumber > 0) {
+                                return listProduct.get(choiceNumber - 1).getProduct_Id();
+                            } else {
+                                System.err.println("Lựa chọn phải là số nguyên lớn hơn 0,vui lòng nhập lại");
                             }
+                        } catch (NumberFormatException ex) {
+                            System.err.println("Lựa chọn phải là số,vui lòng nhập lại");
+                        } catch (Exception ex2) {
+                            System.err.println("Lỗi hệ thống");
                         }
                     }
-                } catch (Exception ex2) {
-                    System.err.println("Lỗi hệ thống");
                 }
+            } catch (Exception ex2) {
+                System.err.println("Lỗi hệ thống");
+            }
 
         }
     }
 
-        public static int inputQuantity () {
-            while (true) {
-                String inputQuantityStr = sc.nextLine().trim();
-                if (inputQuantityStr.isEmpty()) {
-                    System.err.println("Số lượng nhập không được để trống,vui lòng nhập lại");
-                } else {
-                    try {
-                        int inputQuantity = Integer.parseInt(inputQuantityStr);
-                        if (inputQuantity > 0) {
-                            return inputQuantity;
-                        } else {
-                            System.err.println("Số lượng nhập phải là số nguyên lớn hơn 0,vui lòng nhập lại");
-                        }
-                    } catch (NumberFormatException ex) {
-                        System.err.println("Số lượng nhập phải là số,vui lòng nhập lại");
+    public static int inputQuantity() {
+        while (true) {
+            String inputQuantityStr = sc.nextLine().trim();
+            if (inputQuantityStr.isEmpty()) {
+                System.err.println("Số lượng nhập không được để trống,vui lòng nhập lại");
+            } else {
+                try {
+                    int inputQuantity = Integer.parseInt(inputQuantityStr);
+                    if (inputQuantity > 0) {
+                        return inputQuantity;
+                    } else {
+                        System.err.println("Số lượng nhập phải là số nguyên lớn hơn 0,vui lòng nhập lại");
                     }
+                } catch (NumberFormatException ex) {
+                    System.err.println("Số lượng nhập phải là số,vui lòng nhập lại");
                 }
             }
         }
-
-        public static float inputPrice () {
-            while (true) {
-                String inputPriceStr = sc.nextLine().trim();
-                if (inputPriceStr.isEmpty()) {
-                    System.err.println("Giá nhập không được để trống,vui lòng nhập lại");
-                } else {
-                    try {
-                        float inputPrice = Float.parseFloat(inputPriceStr);
-                        if (inputPrice > 0) {
-                            return inputPrice;
-                        } else {
-                            System.err.println("Giá nhập phải là số nguyên lớn hơn 0,vui lòng nhập lại");
-                        }
-                    } catch (NumberFormatException ex) {
-                        System.err.println("Giá nhập phải là số,vui lòng nhập lại");
-                    }
-                }
-            }
-        }
-
-
-        public void displayDataBillDetail () {
-            System.out.printf("| %-20d | %-30d | %-15s | %-30d | %-20.1f |\n", this.bill_Detail_Id, this.bill_Id, this.product_Id, this.quantity, this.price);
-        }
-
     }
+
+    public static float inputPrice() {
+        while (true) {
+            String inputPriceStr = sc.nextLine().trim();
+            if (inputPriceStr.isEmpty()) {
+                System.err.println("Giá nhập không được để trống,vui lòng nhập lại");
+            } else {
+                try {
+                    float inputPrice = Float.parseFloat(inputPriceStr);
+                    if (inputPrice > 0) {
+                        return inputPrice;
+                    } else {
+                        System.err.println("Giá nhập phải là số nguyên lớn hơn 0,vui lòng nhập lại");
+                    }
+                } catch (NumberFormatException ex) {
+                    System.err.println("Giá nhập phải là số,vui lòng nhập lại");
+                }
+            }
+        }
+    }
+
+
+    public void displayDataBillDetail() {
+        System.out.printf("| %-20d | %-30d | %-15s | %-30d | %-20.1f |\n", this.bill_Detail_Id, this.bill_Id, this.product_Id, this.quantity, this.price);
+    }
+
+}

@@ -24,7 +24,7 @@ public class AccountManagement {
     public static final int indexOfPage = 10;
     public static List<Account> listAccount = new ArrayList<>();
 
-    static void displayAccountMenu() throws SQLException {
+    static void displayAccountMenu(String employeeIdOfUserName, String userName) throws SQLException {
         boolean isExitAccountMenu = true;
         do {
             String repeated = new String(new char[67]).replace("\0", border);
@@ -40,16 +40,16 @@ public class AccountManagement {
             int choiceAccountMenu = validateChoiceAccountMenu();
             switch (choiceAccountMenu) {
                 case 1:
-                    AccountManagement.displayDataAccount(Display);
+                    AccountManagement.displayDataAccount(Display, employeeIdOfUserName, userName);
                     break;
                 case 2:
-                    AccountManagement.displayDataAccount(Create);
+                    AccountManagement.displayDataAccount(Create, employeeIdOfUserName, userName);
                     break;
                 case 3:
-                    AccountManagement.displayDataAccount(UpdateAccountStatus);
+                    AccountManagement.displayDataAccount(UpdateAccountStatus, employeeIdOfUserName, userName);
                     break;
                 case 4:
-                    AccountManagement.displayDataAccount(Search);
+                    AccountManagement.displayDataAccount(Search, employeeIdOfUserName, userName);
                     break;
                 case 5:
                     isExitAccountMenu = false;
@@ -80,7 +80,7 @@ public class AccountManagement {
         }
     }
 
-    public static void displayDataAccount(AccountChoice choiceStatus) throws SQLException {
+    public static void displayDataAccount(AccountChoice choiceStatus, String employeeIdOfUserName, String userName) throws SQLException {
         int cntPage = 0;
         int choiceNextPage = 0;
         int i = 1;
@@ -97,7 +97,7 @@ public class AccountManagement {
                         do {
                             System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                             if (i == 1 && maxPage == 1) {
-                                System.out.println("1.Thoát khỏi danh sách tài khoản");
+                                System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách tài khoản" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 if (choiceNextPage != 0) {
@@ -105,8 +105,8 @@ public class AccountManagement {
                                     break;
                                 }
                             } else if (i == 1) {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
-                                System.out.println("2.Thoát khỏi danh sách tài khoản");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi danh sách tài khoản" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
@@ -121,11 +121,9 @@ public class AccountManagement {
                                     default:
                                         System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                 }
-
-
                             } else if (i == (int) getTotalPage()) {
-                                System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                System.out.println("2.Thoát khỏi danh sách tài khoản");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi danh sách tài khoản" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
@@ -142,9 +140,9 @@ public class AccountManagement {
 
                                 }
                             } else {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                 System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                System.out.println("3.Thoát khỏi danh sách tài khoản");
+                                System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi danh sách tài khoản" + ColorsMenu.ANSI_RESET);
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
@@ -182,7 +180,7 @@ public class AccountManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách tài khoản");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Tạo tài khoản mới");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -193,11 +191,11 @@ public class AccountManagement {
                                             break;
                                         case 2:
                                             List<Employee> listEmployee = EmployeeBusiness.getShowAllDataEmployeeNotInAccount();
-                                            if(listEmployee.isEmpty()){
-                                                System.out.println(ColorsMenu.RED_BOLD+"Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa "+ColorsMenu.ANSI_RESET);
+                                            if (listEmployee.isEmpty()) {
+                                                System.out.println(ColorsMenu.RED_BOLD + "Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa " + ColorsMenu.ANSI_RESET);
                                                 isExitDisplayDataAccount = false;
                                                 isCheckExitCreate = false;
-                                            }else{
+                                            } else {
                                                 AccountManagement.creatDataAccount(sc);
                                                 cntAllDataOfAccount = getCntDataAccount();
                                                 maxPage = (int) Math.ceil((double) cntAllDataOfAccount / perPage);
@@ -208,8 +206,8 @@ public class AccountManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi tạo tài khoản mới");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tạo tài khoản mới" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Tạo tài khoản mới");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -225,11 +223,11 @@ public class AccountManagement {
                                             break;
                                         case 3:
                                             List<Employee> listEmployee = EmployeeBusiness.getShowAllDataEmployeeNotInAccount();
-                                            if(listEmployee.isEmpty()){
-                                                System.out.println(ColorsMenu.RED_BOLD+"Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa "+ColorsMenu.ANSI_RESET);
+                                            if (listEmployee.isEmpty()) {
+                                                System.out.println(ColorsMenu.RED_BOLD + "Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa " + ColorsMenu.ANSI_RESET);
                                                 isExitDisplayDataAccount = false;
                                                 isCheckExitCreate = false;
-                                            }else{
+                                            } else {
                                                 AccountManagement.creatDataAccount(sc);
                                                 cntAllDataOfAccount = getCntDataAccount();
                                                 maxPage = (int) Math.ceil((double) cntAllDataOfAccount / perPage);
@@ -240,8 +238,8 @@ public class AccountManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi tạo tài khoản mới");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tạo tài khoản mới" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Tạo tài khoản mới");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -257,11 +255,11 @@ public class AccountManagement {
                                             break;
                                         case 3:
                                             List<Employee> listEmployee = EmployeeBusiness.getShowAllDataEmployeeNotInAccount();
-                                            if(listEmployee.isEmpty()){
-                                                System.out.println(ColorsMenu.RED_BOLD+"Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa "+ColorsMenu.ANSI_RESET);
+                                            if (listEmployee.isEmpty()) {
+                                                System.out.println(ColorsMenu.RED_BOLD + "Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa " + ColorsMenu.ANSI_RESET);
                                                 isExitDisplayDataAccount = false;
                                                 isCheckExitCreate = false;
-                                            }else{
+                                            } else {
                                                 AccountManagement.creatDataAccount(sc);
                                                 cntAllDataOfAccount = getCntDataAccount();
                                                 maxPage = (int) Math.ceil((double) cntAllDataOfAccount / perPage);
@@ -273,9 +271,9 @@ public class AccountManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("3.Thoát khỏi tạo tài khoản mới");
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi tạo tài khoản mới" + ColorsMenu.ANSI_RESET);
                                     System.out.println("4.Tạo tài khoản mới");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -296,11 +294,11 @@ public class AccountManagement {
                                             break;
                                         case 4:
                                             List<Employee> listEmployee = EmployeeBusiness.getShowAllDataEmployeeNotInAccount();
-                                            if(listEmployee.isEmpty()){
-                                                System.out.println(ColorsMenu.RED_BOLD+"Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa "+ColorsMenu.ANSI_RESET);
+                                            if (listEmployee.isEmpty()) {
+                                                System.out.println(ColorsMenu.RED_BOLD + "Tất cả nhân viên đã có tài khoản rồi,k thể tạo mới tài khoản được nữa " + ColorsMenu.ANSI_RESET);
                                                 isExitDisplayDataAccount = false;
                                                 isCheckExitCreate = false;
-                                            }else{
+                                            } else {
                                                 AccountManagement.creatDataAccount(sc);
                                                 cntAllDataOfAccount = getCntDataAccount();
                                                 maxPage = (int) Math.ceil((double) cntAllDataOfAccount / perPage);
@@ -316,7 +314,7 @@ public class AccountManagement {
                         }
                     } while (isCheckExitCreate);
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về tài khoản trong bảng Account" + ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về tài khoản trong bảng Account" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case UpdateAccountStatus:
@@ -329,7 +327,7 @@ public class AccountManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách tài khoản");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Cập nhật trạng thái tài khoản");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -339,7 +337,7 @@ public class AccountManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 2:
-                                            AccountManagement.updateDataAccountStatus(sc);
+                                            AccountManagement.updateDataAccountStatus(sc, employeeIdOfUserName, userName);
                                             cntAllDataOfAccount = getCntDataAccount();
                                             isExitDisplayDataAccount = false;
                                             break;
@@ -347,8 +345,8 @@ public class AccountManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi cập nhật trạng thái tài khoản");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật trạng thái tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật trạng thái tài khoản");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -363,7 +361,7 @@ public class AccountManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 3:
-                                            AccountManagement.updateDataAccountStatus(sc);
+                                            AccountManagement.updateDataAccountStatus(sc, employeeIdOfUserName, userName);
                                             cntAllDataOfAccount = getCntDataAccount();
                                             isExitDisplayDataAccount = false;
                                             break;
@@ -371,8 +369,8 @@ public class AccountManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi cập nhật trạng thái tài khoản");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật trạng thái tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật trạng thái tài khoản");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -387,7 +385,7 @@ public class AccountManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 3:
-                                            AccountManagement.updateDataAccountStatus(sc);
+                                            AccountManagement.updateDataAccountStatus(sc, employeeIdOfUserName, userName);
                                             cntAllDataOfAccount = getCntDataAccount();
                                             isExitDisplayDataAccount = false;
                                             break;
@@ -396,9 +394,9 @@ public class AccountManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi cập nhật trạng thái tài khoản");
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật trạng thái tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật trạng thái tài khoản");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -418,7 +416,7 @@ public class AccountManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 4:
-                                            AccountManagement.updateDataAccountStatus(sc);
+                                            AccountManagement.updateDataAccountStatus(sc, employeeIdOfUserName, userName);
                                             cntAllDataOfAccount = getCntDataAccount();
                                             isExitDisplayDataAccount = false;
                                             break;
@@ -431,7 +429,7 @@ public class AccountManagement {
                         }
                     } while (isCheckExitUpdateStatus);
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về tài khoản trong bảng Account" + ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về tài khoản trong bảng Account" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Search:
@@ -444,7 +442,7 @@ public class AccountManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi tìm kiếm tài khoản");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi tìm kiếm tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Tìm kiếm tài khoản cho phép tìm theo username hoặc tên nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -454,17 +452,17 @@ public class AccountManagement {
                                             isCheckExitSearch = false;
                                             break;
                                         case 2:
+                                            AccountManagement.searchData(employeeIdOfUserName, userName);
                                             cntPage = 0;
                                             i = 1;
-                                            AccountManagement.searchData();
                                             isExitDisplayDataAccount = false;
                                             break;
                                         default:
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi tìm kiếm tài khoản");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tìm kiếm tài khoản" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Tìm kiếm tài khoản cho phép tìm theo username hoặc tên nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -479,9 +477,9 @@ public class AccountManagement {
                                             isCheckExitSearch = false;
                                             break;
                                         case 3:
+                                            AccountManagement.searchData(employeeIdOfUserName, userName);
                                             cntPage = 0;
                                             i = 1;
-                                            AccountManagement.searchData();
                                             isExitDisplayDataAccount = false;
                                             break;
                                         default:
@@ -504,9 +502,9 @@ public class AccountManagement {
                                             isCheckExitSearch = false;
                                             break;
                                         case 3:
+                                            AccountManagement.searchData(employeeIdOfUserName, userName);
                                             cntPage = 0;
                                             i = 1;
-                                            AccountManagement.searchData();
                                             isExitDisplayDataAccount = false;
                                             break;
                                         default:
@@ -536,9 +534,9 @@ public class AccountManagement {
                                             isCheckExitSearch = false;
                                             break;
                                         case 4:
+                                            AccountManagement.searchData(employeeIdOfUserName, userName);
                                             cntPage = 0;
                                             i = 1;
-                                            AccountManagement.searchData();
                                             isExitDisplayDataAccount = false;
                                             break;
                                         default:
@@ -548,10 +546,10 @@ public class AccountManagement {
                                 }
                             } while (isExitDisplayDataAccount);
                         }
-                    }while (isCheckExitSearch);
+                    } while (isCheckExitSearch);
 
                 } else {
-                   System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về tài khoản trong bảng Account" + ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về tài khoản trong bảng Account" + ColorsMenu.ANSI_RESET);
                 }
                 break;
 
@@ -572,7 +570,7 @@ public class AccountManagement {
         listAccount = AccountBusiness.getAllDataAccount(perPage, cntPage);
         listAccount.forEach(Account::displayDataAccount);
         System.out.println("* " + repeated + " *");
-        System.out.print("| Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
+        System.out.print("  Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
         System.out.print("All data : " + cntAllDataOfAccount + "\n");
         System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
     }
@@ -606,115 +604,126 @@ public class AccountManagement {
 
     public static void creatDataAccount(Scanner sc) throws SQLException {
         List<Employee> listEmployee = EmployeeBusiness.getShowAllDataEmployeeNotInAccount();
-            System.out.print("Nhập số tài khoản mà bạn muốn thêm :");
-            while (true) {
-                String inputNumberStr = sc.nextLine().trim();
-                if (inputNumberStr.isEmpty()) {
-                    System.err.println("Số lượng tài khoản mà bạn muốn thêm không được để trống,vui lòng nhập lại");
-                } else {
-                    try {
-                        int number = Integer.parseInt(inputNumberStr);
-                        if(number>listEmployee.size()){
-                            System.out.println(ColorsMenu.RED_BOLD+"Xin lỗi số lượng nhân viên chưa có tài khoản chỉ có "+listEmployee.size()+" vui lòng nhập lại số lượng tài khoản mà bạn muốn thêm"+ColorsMenu.ANSI_RESET);
-                        } else if (number > 0) {
-                            for (int i = 0; i < number; i++) {
-                                System.out.println("Nhập vào tài khoản thứ " + (i + 1) + ":");
-                                Account accNew = new Account();
-                                accNew.inputDataAccount();
-                                boolean result = AccountBusiness.creatDataAccount(accNew);
-                                if (result && number == 1) {
-                                    System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công tài khoản" + ColorsMenu.ANSI_RESET);
-                                } else if (result) {
-                                    System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công tài khoản thứ " + (i + 1) + ColorsMenu.ANSI_RESET);
-                                } else {
-                                    System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                                }
+        System.out.print("Nhập số tài khoản mà bạn muốn thêm :");
+        while (true) {
+            String inputNumberStr = sc.nextLine().trim();
+            if (inputNumberStr.isEmpty()) {
+                System.err.println("Số lượng tài khoản mà bạn muốn thêm không được để trống,vui lòng nhập lại");
+            } else {
+                try {
+                    int number = Integer.parseInt(inputNumberStr);
+                    if (number > listEmployee.size()) {
+                        System.out.println(ColorsMenu.RED_BOLD + "Xin lỗi số lượng nhân viên chưa có tài khoản chỉ có " + listEmployee.size() + " vui lòng nhập lại số lượng tài khoản mà bạn muốn thêm" + ColorsMenu.ANSI_RESET);
+                    } else if (number > 0) {
+                        for (int i = 0; i < number; i++) {
+                            System.out.println("Nhập vào tài khoản thứ " + (i + 1) + ":");
+                            Account accNew = new Account();
+                            accNew.inputDataAccount();
+                            boolean result = AccountBusiness.creatDataAccount(accNew);
+                            if (result && number == 1) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công tài khoản" + ColorsMenu.ANSI_RESET);
+                            } else if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công tài khoản thứ " + (i + 1) + ColorsMenu.ANSI_RESET);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
                             }
-                            break;
-                        } else {
-                            System.err.println("Số lượng tài khoản mà bạn muốn thêm phải là số nguyên lớn hơn 0,vui lòng nhập lại");
                         }
-                    } catch (NumberFormatException ex) {
-                        System.err.println("Số lượng tài khoản mà bạn muốn thêm phải là số,vui lòng nhập lại");
-                    } catch (Exception ex3) {
-                        System.err.println("Lỗi hệ thống");
+                        break;
+                    } else {
+                        System.err.println("Số lượng tài khoản mà bạn muốn thêm phải là số nguyên lớn hơn 0,vui lòng nhập lại");
                     }
-
+                } catch (NumberFormatException ex) {
+                    System.err.println("Số lượng tài khoản mà bạn muốn thêm phải là số,vui lòng nhập lại");
+                } catch (Exception ex3) {
+                    System.err.println("Lỗi hệ thống");
                 }
+
             }
+        }
     }
 
-    public static void updateDataAccountStatus(Scanner sc) throws SQLException {
+    public static void updateDataAccountStatus(Scanner sc, String employeeId, String userName) throws SQLException {
         System.out.println("Nhập vào tên tài khoản cần cập nhật trạng thái:");
         String userNameUpdate = Account.inputUserNameUpdate();
         //Kiểm tra mã nhân viên có tồn tại hay không
         Account acc = AccountBusiness.getAccountByUserName(userNameUpdate);
         if (acc != null) {
-            String accStatusValue=acc.getAcc_Status()?"Active":"Block";
-            System.out.println("Bạn muốn thay đổi trạng thái tài khoản từ " + "["+ColorsMenu.RED_BOLD + accStatusValue + ColorsMenu.ANSI_RESET+"]" + " thành : ");
-            acc.setAcc_Status(Account.inputAccStatusUpdate());
-            //Thực hiện cập nhật
-            boolean result = AccountBusiness.updateDataAccountStatus(acc);
-            if (result) {
-                System.out.println(ColorsMenu.GREEN_BOLD + "Trạng thái tài khoản có tên tài khoản :" + userNameUpdate + " vừa được cập nhật thành công" + ColorsMenu.ANSI_RESET);
+            if (employeeId.equalsIgnoreCase(acc.getEmp_Id())) {
+                System.out.println(ColorsMenu.RED_BOLD+"Rất tiếc bạn đang đăng nhập tài khoản có UserName là " + userName + " với mã nhân viên là :" + employeeId + " vì vậy không thể chuyển đổi trạng thái của tài khoản sang Block được"+ColorsMenu.ANSI_RESET);
             } else {
-                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                String accStatusValue = acc.getAcc_Status() ? "Active" : "Block";
+                System.out.println("Bạn muốn thay đổi trạng thái tài khoản từ " + "[" + ColorsMenu.RED_BOLD + accStatusValue + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                acc.setAcc_Status(Account.inputAccStatusUpdate());
+                //Thực hiện cập nhật
+                boolean result = AccountBusiness.updateDataAccountStatus(acc);
+                if (result) {
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Trạng thái tài khoản có tên tài khoản :" + userNameUpdate + " vừa được cập nhật thành công" + ColorsMenu.ANSI_RESET);
+                } else {
+                    System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                }
             }
+
         } else {
             //Mã nhân viên k tồn tại trong CSDL
-            System.out.println("Tên tài khoản không tồn tại");
+            System.out.println(ColorsMenu.RED_BOLD+"Tên tài khoản không tồn tại"+ColorsMenu.ANSI_RESET);
         }
     }
 
-    public static void updateDataAccountStatusWhenSearch(String inputSearch) throws SQLException {
-        //Kiểm tra mã nhân viên có tồn tại hay không
-        Account acc = AccountBusiness.getAccountByUserName(inputSearch);
-        if (acc != null) {
-            String accStatusValue=acc.getAcc_Status()?"Active":"Block";
-            System.out.println("Bạn muốn thay đổi trạng thái tài khoản từ " + "["+ColorsMenu.RED_BOLD + accStatusValue + ColorsMenu.ANSI_RESET+"]" + " thành : ");
-            acc.setAcc_Status(Account.inputAccStatusUpdate());
-            //Thực hiện cập nhật
-            boolean result = AccountBusiness.updateDataAccountStatus(acc);
-            if (result) {
-                System.out.println(ColorsMenu.GREEN_BOLD + "Trạng thái tài khoản có tên tài khoản :" + inputSearch + " vừa được cập nhật thành công" + ColorsMenu.ANSI_RESET);
-            } else {
-                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-            }
-        }
-    }
 
-    public static void searchData() throws SQLException {
+    public static void searchData(String employeeIdOfUserName, String userName) throws SQLException {
         System.out.println("Nhập vào username hoặc tên nhân viên cần tìm kiếm tài khoản:");
-        while (true){
-            String inputSearch = Account.inputSearch();
-            List<Account> listAccount = null;
-            listAccount = AccountBusiness.searchDataAccountByAccountUserName(inputSearch);
-            if (!listAccount.isEmpty()) {
-                String repeated = new String(new char[168]).replace("\0", border);
-                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-                System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-20s |\n", "Mã tài khoản", "Tên tài khoản", "Mật khẩu", "Quyền tài khoản", "Mã nhân viên","Tên nhân viên", "Trạng thái");
-                System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
-                listAccount.forEach(Account::displayDataAccount);
-                System.out.println("* " + repeated + " *");
-                System.out.println(ColorsMenu.GREEN_BOLD+"Bạn có muốn cập nhật trạng thái tài khoản hay không ?"+ColorsMenu.ANSI_RESET);
-                System.out.println("--                           1.Có                               --");
-                System.out.println("--                           2.Không                            --");
-                System.out.print("Nhập vào lựa chọn của bạn = ");
-                int choiceNumber=AccountManagement.validateChoiceDisplayData();
-                if(choiceNumber==2){
-                    break;
+        String inputSearch = Account.inputSearch();
+        List<Account> listAccountSearch = null;
+        listAccountSearch = AccountBusiness.searchDataAccountByAccountUserName(inputSearch);
+        if (!listAccountSearch.isEmpty()) {
+            String repeated = new String(new char[168]).replace("\0", border);
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-20s |\n", "Mã tài khoản", "Tên tài khoản", "Mật khẩu", "Quyền tài khoản", "Mã nhân viên", "Tên nhân viên", "Trạng thái");
+            System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+            listAccountSearch.forEach(Account::displayDataAccount);
+            System.out.println("* " + repeated + " *");
+            System.out.println(ColorsMenu.GREEN_BOLD + "Bạn có muốn cập nhật trạng thái tài khoản hay không ?" + ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.PURPLE_BOLD+"--                           1.Có                               --"+ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD+"--                           2.Không                            --"+ColorsMenu.ANSI_RESET);
+            System.out.print("Nhập vào lựa chọn của bạn = ");
+            boolean isCheckChoice=true;
+            while (isCheckChoice){
+                int choiceNumberAccountStatusUpdate = AccountManagement.validateChoiceDisplayData();
+                switch (choiceNumberAccountStatusUpdate){
+                    case 1:
+                        if (employeeIdOfUserName.equalsIgnoreCase(listAccountSearch.get(0).getEmp_Id())) {
+                            System.out.println(ColorsMenu.RED_BOLD+"Rất tiếc bạn đang đăng nhập tài khoản có UserName là " + userName + " với mã nhân viên là :" + employeeIdOfUserName + " vì vậy không thể chuyển đổi trạng thái của tài khoản sang Block được"+ColorsMenu.ANSI_RESET);
+                        } else {
+                            Account acc = AccountBusiness.getAccountByUserName(inputSearch);
+                            String accStatusValue = acc.getAcc_Status() ? "Active" : "Block";
+                            System.out.println("Bạn muốn thay đổi trạng thái tài khoản từ " + "[" + ColorsMenu.RED_BOLD + accStatusValue + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                            acc.setAcc_Status(Account.inputAccStatusUpdate());
+                            //Thực hiện cập nhật
+                            boolean result = AccountBusiness.updateDataAccountStatus(acc);
+                            if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Trạng thái tài khoản có tên tài khoản :" + inputSearch + " vừa được cập nhật thành công" + ColorsMenu.ANSI_RESET);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                            }
+                        }
+                        isCheckChoice=false;
+                        break;
+                    case 2:
+                        isCheckChoice=false;
+                        break;
+                    default:
+                        System.out.println("Vui lòng lựa chọn từ 1 đến 2");
                 }
-                else{
-                    AccountManagement.updateDataAccountStatusWhenSearch(listAccount.get(0).getUser_Name());
-                    break;
-                }
-
-            } else {
-                System.out.println(ColorsMenu.RED_BOLD+"Không tìm thấy kết quả"+ColorsMenu.ANSI_RESET);
-                break;
             }
 
+        } else {
+            System.out.println(ColorsMenu.RED_BOLD + "Không tìm thấy kết quả" + ColorsMenu.ANSI_RESET);
+
         }
+
     }
+
+
+
 
 }

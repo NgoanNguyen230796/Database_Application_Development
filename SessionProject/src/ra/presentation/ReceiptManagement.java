@@ -1,6 +1,8 @@
 package ra.presentation;
 
+import ra.Choice.ReceiptChoice;
 import ra.businnes.BillDetailBusiness;
+import ra.businnes.EmployeeBusiness;
 import ra.businnes.ReceiptBusiness;
 import ra.colors.ColorsMenu;
 import ra.entity.Bill;
@@ -18,8 +20,6 @@ import static ra.presentation.MainManagement.sc;
 
 public class ReceiptManagement {
     public static final String border = "-";
-    public static final int perPage = 10;
-    public static final int indexOfPage = 10;
     public static List<Bill> listBill = new ArrayList<>();
 
     static void displayReceiptMenu(String employeeId) throws SQLException {
@@ -44,7 +44,7 @@ public class ReceiptManagement {
                     break;
                 case 2:
                     ReceiptManagement.displayDataReceipt();
-                    ReceiptManagement.creatDataReceiptFromBill(sc, employeeId);
+                    ReceiptManagement.creatDataReceiptFromBillAdmin(sc, employeeId);
                     break;
                 case 3:
                     listBill = ReceiptBusiness.getAllDataReceiptByBillStatusOther2();
@@ -64,9 +64,9 @@ public class ReceiptManagement {
                     BillDetailManagement.displayBillDetailForReceipt();
                     break;
                 case 5:
-                    listBill = ReceiptBusiness.getAllDataReceiptByBillStatusOther2();
+                    listBill = ReceiptBusiness.getAllDataReceiptByBillStatus0();
                     if (listBill.isEmpty()) {
-                        System.out.println("Không có phiếu nhập nào với trạng thái Tạo hoặc Hủy cả");
+                        System.out.println("Không có phiếu nhập nào với trạng thái Tạo cả");
                     } else {
                         repeated = new String(new char[179]).replace("\0", border);
                         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
@@ -110,6 +110,14 @@ public class ReceiptManagement {
         }
     }
 
+    public static void displayDataReceipt(ReceiptChoice choiceStatus) throws SQLException {
+        int cntPage = 0;
+        int choiceNextPage = 0;
+        int i = 1;
+        // Đếm tất cả số lượng bản ghi trong Employee
+//        int cntAllDataOfEmployee = getCntDataReceipt();
+    }
+
     public static void displayDataReceipt() throws SQLException {
         listBill = ReceiptBusiness.getAllDataReceipt();
         if (listBill.isEmpty()) {
@@ -126,7 +134,6 @@ public class ReceiptManagement {
 
     public static void displayDataReceiptBillStatus0() throws SQLException {
         listBill = ReceiptBusiness.getAllDataReceiptByBillStatus0();
-
     }
 
     public static void displayDataReceiptBillStatusOther2() throws SQLException {
@@ -143,9 +150,7 @@ public class ReceiptManagement {
 
         }
     }
-
-
-    public static void creatDataReceiptFromBill(Scanner sc, String employeeId) throws SQLException {
+    public static void creatDataReceiptFromBillAdmin(Scanner sc, String employeeId) throws SQLException {
         System.out.print("Nhập số lượng phiếu nhập mà bạn muốn thêm :");
         while (true) {
             String inputNumberStr = sc.nextLine().trim();
@@ -158,7 +163,7 @@ public class ReceiptManagement {
                         for (int i = 0; i < number; i++) {
                             System.out.println("Nhập vào phiếu nhập thứ " + (i + 1) + ":");
                             Bill billNew = new Bill();
-                            billNew.inputDataReceiptForBill(employeeId);
+                            billNew.inputDataReceiptForBillAdmin(employeeId);
                             boolean result = ReceiptBusiness.creatDataReceipt(billNew);
                             if (result && number == 1) {
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu nhập" + ColorsMenu.ANSI_RESET);
@@ -186,47 +191,47 @@ public class ReceiptManagement {
             }
         }
     }
-//    public static void creatDataReceiptFromBillUser(Scanner sc,String employeeId) throws SQLException {
-//        System.out.print("Nhập số lượng phiếu nhập mà bạn muốn thêm :");
-//        while (true) {
-//            String inputNumberStr = sc.nextLine().trim();
-//            if (inputNumberStr.isEmpty()) {
-//                System.err.println("Số lượng phiếu nhập mà bạn muốn thêm không được để trống,vui lòng nhập lại");
-//            } else {
-//                try {
-//                    int number = Integer.parseInt(inputNumberStr);
-//                    if (number > 0) {
-//                        for (int i = 0; i < number; i++) {
-//                            System.out.println("Nhập vào phiếu nhập thứ " + (i + 1) + ":");
-//                            Bill billNew = new Bill();
-//                            billNew.inputDataReceiptForBill(employeeId);
-//                            boolean result = ReceiptBusiness.creatDataReceipt(billNew);
-//                            if (result && number == 1) {
-//                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu nhập" + ColorsMenu.ANSI_RESET);
-//                                long billIdNow = ReceiptBusiness.maxIndex();
-//                                BillDetailManagement.creatDataBillDetail(sc, billIdNow);
-//                            } else if (result) {
-//                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu nhập thứ " + (i + 1) + ColorsMenu.ANSI_RESET);
-//                                long billIdNow = ReceiptBusiness.maxIndex();
-//                                BillDetailManagement.creatDataBillDetail(sc, billIdNow);
-//                            } else {
-//                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-//                            }
-//                        }
-//                        break;
-//                    } else {
-//                        System.err.println("Số lượng phiếu nhập mà bạn muốn thêm phải là số nguyên lớn hơn 0,vui lòng nhập lại");
-//                    }
-//
-//                } catch (NumberFormatException ex) {
-//                    System.err.println("Số lượng phiếu nhập mà bạn muốn thêm phải là số,vui lòng nhập lại");
-//                } catch (Exception ex3) {
-//                    System.err.println("Lỗi hệ thống");
-//                }
-//
-//            }
-//        }
-//    }
+    public static void creatDataReceiptFromBillUser(Scanner sc, String employeeId) throws SQLException {
+        System.out.print("Nhập số lượng phiếu nhập mà bạn muốn thêm :");
+        while (true) {
+            String inputNumberStr = sc.nextLine().trim();
+            if (inputNumberStr.isEmpty()) {
+                System.err.println("Số lượng phiếu nhập mà bạn muốn thêm không được để trống,vui lòng nhập lại");
+            } else {
+                try {
+                    int number = Integer.parseInt(inputNumberStr);
+                    if (number > 0) {
+                        for (int i = 0; i < number; i++) {
+                            System.out.println("Nhập vào phiếu nhập thứ " + (i + 1) + ":");
+                            Bill billNew = new Bill();
+                            billNew.inputDataReceiptForBillUser(employeeId);
+                            boolean result = ReceiptBusiness.creatDataReceipt(billNew);
+                            if (result && number == 1) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu nhập" + ColorsMenu.ANSI_RESET);
+                                long billIdNow = ReceiptBusiness.maxIndex();
+                                BillDetailManagement.creatDataBillDetail(sc, billIdNow);
+                            } else if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công phiếu nhập thứ " + (i + 1) + ColorsMenu.ANSI_RESET);
+                                long billIdNow = ReceiptBusiness.maxIndex();
+                                BillDetailManagement.creatDataBillDetail(sc, billIdNow);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                            }
+                        }
+                        break;
+                    } else {
+                        System.err.println("Số lượng phiếu nhập mà bạn muốn thêm phải là số nguyên lớn hơn 0,vui lòng nhập lại");
+                    }
+
+                } catch (NumberFormatException ex) {
+                    System.err.println("Số lượng phiếu nhập mà bạn muốn thêm phải là số,vui lòng nhập lại");
+                } catch (Exception ex3) {
+                    System.err.println("Lỗi hệ thống");
+                }
+
+            }
+        }
+    }
 
     public static void updateDataReceipt(Scanner sc) throws SQLException {
         boolean isExitUpdateDataReceiptMenu = true;
@@ -342,64 +347,73 @@ public class ReceiptManagement {
         boolean result;
         if (bil != null) {
             if (bil.getBill_Status() != 2) {
-                List<Bill_Detail> listBillDetail = BillDetailBusiness.getAllDataBillDetailByReceipt(bil.getBill_Id());
-                do {
-                    if (!listBillDetail.isEmpty()) {
-                        String repeated = new String(new char[69]).replace("\0", border);
-                        System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
-                        System.out.println("========= Vui lòng lựa chọn danh mục cần cập nhật thông tin =========");
-                        System.out.println("--              1.Mã nhân viên nhập                                --");
-                        System.out.println("--              2.Ngày tạo                                         --");
-                        System.out.println("--              3.Trạng thái                                       --");
-                        System.out.println("--              4.Cập nhật cả chi tiết phiếu nhập của phiếu nhập   --");
-                        System.out.println("--              5.Thoát khỏi cập thông tin nhập phiếu nhâp         --");
-                        System.out.println(repeated + ColorsMenu.ANSI_RESET);
-                        System.out.println("Lựa chọn của bạn là :");
-                        int choiceUpdate = validateChoiceUpdateReceipt();
-                        switch (choiceUpdate) {
-                            case 1:
-                                System.out.println("Bạn muốn thay đổi mã nhân viên nhập" + " từ " + "[" + ColorsMenu.RED_BOLD + bil.getEmp_Id_Created() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-                                bil.setEmp_Id_Created(Bill.inputEmpIdCreated());
-                                result = ReceiptBusiness.updateDataReceiptForBillUser(bil);
-                                if (result) {
-                                    System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công mã nhân viên nhập" + ColorsMenu.ANSI_RESET);
-                                } else {
-                                    System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                                }
-                                break;
-                            case 2:
-                                System.out.print("Bạn muốn thay đổi ngày tạo" + " từ " + "[" + ColorsMenu.RED_BOLD + bil.getCreated_Bill() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-                                bil.setCreated_Bill(Bill.inputCreatedBill());
-                                result = ReceiptBusiness.updateDataReceiptForBillUser(bil);
-                                if (result) {
-                                    System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công ngày tạo" + ColorsMenu.ANSI_RESET);
-                                } else {
-                                    System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                                }
-                                break;
+                while (isExitUpdateDataReceiptMenu){
+                    List<Bill_Detail> listBillDetail = BillDetailBusiness.getAllDataBillDetailByReceipt(bil.getBill_Id());
+                    boolean isExitMenu=true;
+                    do {
+                        if (!listBillDetail.isEmpty()) {
+                            String repeated = new String(new char[69]).replace("\0", border);
+                            System.out.println(ColorsMenu.YELLOW_BOLD + repeated);
+                            System.out.println("========= Vui lòng lựa chọn danh mục cần cập nhật thông tin =========");
+                            System.out.println("--              1.Mã nhân viên nhập                                --");
+                            System.out.println("--              2.Ngày tạo                                         --");
+                            System.out.println("--              3.Trạng thái                                       --");
+                            System.out.println("--              4.Cập nhật cả chi tiết phiếu nhập của phiếu nhập   --");
+                            System.out.println("--              5.Thoát khỏi cập thông tin nhập phiếu nhâp         --");
+                            System.out.println(repeated + ColorsMenu.ANSI_RESET);
+                            System.out.println("Lựa chọn của bạn là :");
+                            int choiceUpdate = validateChoiceUpdateReceipt();
+                            switch (choiceUpdate) {
+                                case 1:
+                                    System.out.println("Bạn muốn thay đổi mã nhân viên nhập" + " từ " + "[" + ColorsMenu.RED_BOLD + bil.getEmp_Id_Created() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                                    bil.setEmp_Id_Created(Bill.inputEmpIdCreated());
+                                    result = ReceiptBusiness.updateDataReceiptForBillUser(bil);
+                                    if (result) {
+                                        System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công mã nhân viên nhập" + ColorsMenu.ANSI_RESET);
+                                    } else {
+                                        System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                                    }
+                                    isExitMenu = false;
+                                    break;
+                                case 2:
+                                    System.out.print("Bạn muốn thay đổi ngày tạo" + " từ " + "[" + ColorsMenu.RED_BOLD + bil.getCreated_Bill() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                                    bil.setCreated_Bill(Bill.inputCreatedBill());
+                                    result = ReceiptBusiness.updateDataReceiptForBillUser(bil);
+                                    if (result) {
+                                        System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công ngày tạo" + ColorsMenu.ANSI_RESET);
+                                    } else {
+                                        System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                                    }
+                                    isExitMenu = false;
+                                    break;
 
-                            case 3:
-                                String StatusValue = bil.getBill_Status() == 0 ? "Tạo" : bil.getBill_Status() == 1 ? "Hủy" : "Duyệt";
-                                System.out.println("Bạn muốn thay đổi trạng thái" + " từ " + "[" + ColorsMenu.RED_BOLD + StatusValue + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-                                bil.setBill_Status(Bill.inputBillStatusUpdate());
-                                result = ReceiptBusiness.updateDataReceiptForBillUser(bil);
-                                if (result) {
-                                    System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công trạng thái" + ColorsMenu.ANSI_RESET);
-                                } else {
-                                    System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                                }
-                                break;
-                            case 4:
-                                ReceiptManagement.updateBillDetail(bil);
-                                break;
-                            case 5:
-                                isExitUpdateDataReceiptMenu = false;
-                                break;
-                            default:
-                                System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-5");
+                                case 3:
+                                    String StatusValue = bil.getBill_Status() == 0 ? "Tạo" : bil.getBill_Status() == 1 ? "Hủy" : "Duyệt";
+                                    System.out.println("Bạn muốn thay đổi trạng thái" + " từ " + "[" + ColorsMenu.RED_BOLD + StatusValue + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                                    bil.setBill_Status(Bill.inputBillStatusUpdate());
+                                    result = ReceiptBusiness.updateDataReceiptForBillUser(bil);
+                                    if (result) {
+                                        System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công trạng thái" + ColorsMenu.ANSI_RESET);
+                                    } else {
+                                        System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                                    }
+                                    isExitMenu = false;
+                                    break;
+                                case 4:
+                                    ReceiptManagement.updateBillDetail(bil);
+                                    isExitMenu = false;
+                                    break;
+                                case 5:
+                                    isExitMenu = false;
+                                    isExitUpdateDataReceiptMenu=false;
+                                    break;
+                                default:
+                                    System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-5");
+                            }
                         }
-                    }
-                } while (isExitUpdateDataReceiptMenu);
+                    } while (isExitMenu);
+                }
+
             } else {
                 System.out.println(ColorsMenu.RED_BOLD + "Rất tiếc chỉ được cập nhật thông tin phiếu nhập khi trạng thái đang ở trạng thái Tạo hoặc Hủy" + ColorsMenu.ANSI_RESET);
             }
@@ -434,8 +448,8 @@ public class ReceiptManagement {
         while (isCheckUpdateBillDetail) {
             BillDetailManagement.displayBillDetail(bil);
             System.out.println("Phiếu nhập có cả chi tiết phiếu nhập ,bạn có muốn cập nhật không ?");
-            System.out.println("1.Có");
-            System.out.println("2.Không");
+            System.out.println(ColorsMenu.YELLOW_BOLD+"1.Có"+ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD+"2.Không"+ColorsMenu.ANSI_RESET);
             System.out.println("Nhập vào lựa chọn của bạn :");
             int choice = validateChoiceUpdateBillDetail();
             switch (choice) {
@@ -489,8 +503,8 @@ public class ReceiptManagement {
         if (bil != null) {
             while (isCheckUpdateBillDetail) {
                 System.out.println("Bạn có muốn duyệt không ?");
-                System.out.println("1.Có");
-                System.out.println("2.Không");
+                System.out.println(ColorsMenu.PURPLE_BOLD+"1.Có"+ColorsMenu.ANSI_RESET);
+                System.out.println(ColorsMenu.RED_BOLD+"2.Không"+ColorsMenu.ANSI_RESET);
                 System.out.println("Nhập vào lựa chọn của bạn :");
                 int choice = validateChoiceUpdateBillDetail();
                 switch (choice) {
@@ -523,7 +537,7 @@ public class ReceiptManagement {
     public static void searchReceipt(String employeeId) throws SQLException {
         boolean isExitUpdateDataReceiptMenu = true;
         boolean result = false;
-        boolean isCheckSearch = true;
+
         System.out.println("Nhập vào mã phiếu hoặc mã code của phiếu nhâp cần tìm kiếm :");
         String receiptUpdate = Bill.inputReceiptUpdate();
         Bill bil = null;
@@ -536,41 +550,68 @@ public class ReceiptManagement {
             List<Bill> listBill = new ArrayList<>();
             listBill.add(bil);
             listBill.forEach(Bill::displayDataReceipt);
-            System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
-            String repeated2 = new String(new char[69]).replace("\0", border);
-            System.out.println(ColorsMenu.PURPLE_BOLD + repeated2);
-            System.out.println("=========      Vui lòng lựa chọn danh mục                   =========");
-            System.out.println("--              1.Cập nhật phiếu nhập                              --");
-            System.out.println("--              2.Duyệt phiếu nhập                                 --");
-            System.out.println("--              3.Thoát khỏi tìm kiếm phiếu nhập                   --");
-            System.out.println(repeated2 + ColorsMenu.ANSI_RESET);
-            System.out.println("Lựa chọn của bạn là :");
-            int choiceUpdate = validateChoiceUpdateReceipt();
-            while (isCheckSearch) {
-                switch (choiceUpdate) {
+            System.out.println("* " + repeated + " *"+ColorsMenu.ANSI_RESET);
+            System.out.println("Bạn có muốn cập nhật không ?");
+            System.out.println(ColorsMenu.BLUE_BOLD+"1.Có"+ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD+"2.Không"+ColorsMenu.ANSI_RESET);
+            int choice = validateChoiceUpdateReceipt();
+            boolean isExitChoice=true;
+            while (isExitChoice){
+                switch (choice){
                     case 1:
-                        if (bil.getBill_Status() != 2) {
-                            update(bil, receiptUpdate, isCheckSearch);
-                        } else {
-                            System.out.println(ColorsMenu.RED_BOLD + "Rất tiếc phiếu nhập này đã được duyệt không thể cập nhật được" + ColorsMenu.ANSI_RESET);
+                        if(bil.getBill_Status()==2){
+                            System.out.println(ColorsMenu.RED_BOLD + "Rất tiếc phiếu nhập này đã được Duyệt không thể cập nhật được" + ColorsMenu.ANSI_RESET);
+                            isExitChoice=false;
+                        }else{
+                            String repeated2 = new String(new char[69]).replace("\0", border);
+                            System.out.println(ColorsMenu.PURPLE_BOLD + repeated2);
+                            System.out.println("=========      Vui lòng lựa chọn danh mục                   =========");
+                            System.out.println("--              1.Cập nhật phiếu nhập                              --");
+                            System.out.println("--              2.Duyệt phiếu nhập                                 --");
+                            System.out.println("--              3.Thoát khỏi tìm kiếm phiếu nhập                   --");
+                            System.out.println(repeated2 + ColorsMenu.ANSI_RESET);
+                            System.out.println("Lựa chọn của bạn là :");
+                            int choiceUpdate = validateChoiceUpdateReceipt();
+                            boolean isCheckSearch = true;
+                            while (isCheckSearch) {
+                                switch (choiceUpdate) {
+                                    case 1:
+                                        if (bil.getBill_Status() != 2) {
+                                            updateUser(bil, receiptUpdate, isCheckSearch);
+                                        }
+                                        isCheckSearch = false;
+//                                        isExitChoice=false;
+                                        break;
+                                    case 2:
+                                        if (bil.getBill_Status() == 2 || bil.getBill_Status() == 1) {
+                                            System.out.println(ColorsMenu.RED_BOLD+"Phiếu này đang ở trạng thái Hủy ,nên không thể duyệt được"+ColorsMenu.ANSI_RESET);
+                                        }else{
+                                            approve(bil, isCheckSearch, receiptUpdate, employeeId);
+                                        }
+                                        isCheckSearch = false;
+//                                        isExitChoice=false;
+                                        break;
+                                    case 3:
+                                        isCheckSearch = false;
+                                        isExitChoice=false;
+                                        break;
+                                    default:
+                                        System.out.println("Vui lòng lựa chọn từ 1 đến 3");
+                                }
+                            }
                         }
-                        isCheckSearch = false;
                         break;
                     case 2:
-                        if (bil.getBill_Status() != 2) {
-                            approve(bil, isCheckSearch, receiptUpdate, employeeId);
-                        } else {
-                            System.out.println(ColorsMenu.RED_BOLD + "Rất tiếc phiếu nhập này đang ở chế độ duyệt rồi" + ColorsMenu.ANSI_RESET);
-                        }
-                        isCheckSearch = false;
-                        break;
-                    case 3:
-                        isCheckSearch = false;
+                        isExitChoice=false;
                         break;
                     default:
-                        System.out.println("Vui lòng lựa chọn từ 1 đến 3");
+                        System.out.println("Lựa chọn từ 1 đến 2");
                 }
             }
+
+
+
+
 //            if (bil.getBill_Status() != 2) {
 //                boolean isCheckSearch = true;
 //                while (isCheckSearch) {
@@ -719,11 +760,10 @@ public class ReceiptManagement {
     public static void searchReceiptUser(String employeeId) throws SQLException {
         boolean isExitUpdateDataReceiptMenu = true;
         boolean result = false;
-        boolean isCheckSearch = true;
         System.out.println("Nhập vào mã phiếu hoặc mã code của phiếu nhâp cần tìm kiếm :");
         String receiptUpdate = Bill.inputReceiptUpdate();
         Bill bil = null;
-        bil = ReceiptBusiness.getReceiptByBillIdOrBillCode(receiptUpdate);
+        bil = ReceiptBusiness.getReceiptByBillIdOrBillCodeUser(employeeId,receiptUpdate);
         if (bil != null) {
             String repeated = new String(new char[179]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
@@ -742,6 +782,7 @@ public class ReceiptManagement {
             System.out.println(repeated2 + ColorsMenu.ANSI_RESET);
             System.out.println("Lựa chọn của bạn là :");
             int choiceUpdate = validateChoiceUpdateReceipt();
+            boolean isCheckSearch = true;
             while (isCheckSearch) {
                 switch (choiceUpdate) {
                     case 1:

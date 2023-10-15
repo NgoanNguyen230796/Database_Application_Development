@@ -12,8 +12,9 @@ import java.util.Scanner;
 public class UserManagement {
     public static final Scanner sc = new Scanner(System.in);
     public static final String border = "-";
-    public static List<Bill> listBill=new ArrayList<>();
-    public static void menuUser(String employeeId,String userName) throws SQLException {
+    public static List<Bill> listBill = new ArrayList<>();
+
+    public static void menuUser(String employeeId, String userName) throws SQLException {
         do {
             String repeated = new String(new char[69]).replace("\0", border);
             System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
@@ -28,104 +29,120 @@ public class UserManagement {
             System.out.println("--              8. Tìm kiếm phiếu xuất                             --");
             System.out.println("--              9. Thoát                                           --");
             System.out.println(repeated + ColorsMenu.ANSI_RESET);
+            String repeated1 = new String(new char[179]).replace("\0", border);
             System.out.print("Lựa chọn của bạn là :");
             int choiceAdminMenu = validateChoiceUserMenu();
+//            String repeated1 = null;
             switch (choiceAdminMenu) {
                 case 1:
-                    UserManagement.displayDataReceipt(employeeId,userName);
+                    UserManagement.displayDataReceipt(employeeId, userName);
                     break;
                 case 2:
                     listBill = ReceiptBusiness.getAllDataReceiptBillStatusByEmpId(employeeId);
-                    if (listBill.isEmpty()) {
-                        System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
-                    } else {
-                        String repeated1 = new String(new char[179]).replace("\0", border);
-                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
-                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
-                        System.out.println("* " + repeated1 + " *");
-                        listBill.forEach(Bill::displayDataReceipt);
-                        System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
-                        ReceiptManagement.creatDataReceiptFromBill(sc,employeeId);
+                    if(listBill.isEmpty()){
+                        System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
+                    }else{
+                    repeated1 = new String(new char[179]).replace("\0", border);
+                    System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
+                    System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+                    System.out.println("* " + repeated1 + " *");
+                    listBill.forEach(Bill::displayDataReceipt);
+                    System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
                     }
+                    ReceiptManagement.creatDataReceiptFromBillUser(sc, employeeId);
 
                     break;
                 case 3:
 //                    UserManagement.displayDataReceipt(employeeId,userName);
                     listBill = ReceiptBusiness.getAllDataReceiptBillStatusByEmpId(employeeId);
-                    if (listBill.isEmpty()) {
-                        System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
-                    } else {
-                        String repeated1 = new String(new char[179]).replace("\0", border);
+                    if(listBill.isEmpty()){
+                        System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
+                    }else{
+                        repeated1 = new String(new char[179]).replace("\0", border);
                         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
                         System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
                         System.out.println("* " + repeated1 + " *");
                         listBill.forEach(Bill::displayDataReceipt);
                         System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
-                        ReceiptManagement.updateDataReceiptUser(sc);
                     }
+
+//                    repeated1 = new String(new char[179]).replace("\0", border);
+//                    System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
+//                    System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+//                    System.out.println("* " + repeated1 + " *");
+//                    listBill.forEach(Bill::displayDataReceipt);
+//                    System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
+                    ReceiptManagement.updateDataReceiptUser(sc);
 
                     break;
                 case 4:
                     listBill = ReceiptBusiness.getAllDataReceiptBillStatusByEmpId(employeeId);
-                    if (listBill.isEmpty()) {
-                        System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
-                    } else {
-                        String repeated1 = new String(new char[179]).replace("\0", border);
+                    if(listBill.isEmpty()){
+                        System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
+                    }else{
+                        repeated1 = new String(new char[179]).replace("\0", border);
                         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
                         System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
                         System.out.println("* " + repeated1 + " *");
                         listBill.forEach(Bill::displayDataReceipt);
                         System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
-                        ReceiptManagement.updateDataReceiptUser(sc);
                     }
+//                    repeated1 = new String(new char[179]).replace("\0", border);
+//                    System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
+//                    System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+//                    System.out.println("* " + repeated1 + " *");
+//                    listBill.forEach(Bill::displayDataReceipt);
+//                    System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
+//                    ReceiptManagement.updateDataReceiptUser(sc);
+
                     ReceiptManagement.searchReceiptUser(employeeId);
                     break;
                 case 5:
-                    UserManagement.displayDataBill(employeeId,userName);
+                    UserManagement.displayDataBill(employeeId, userName);
                     break;
                 case 6:
                     listBill = ReceiptBusiness.getAllDataBillBillStatusByEmpId(employeeId);
-                    if (listBill.isEmpty()) {
-                        System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
-                    } else {
-                        String repeated2 = new String(new char[179]).replace("\0", border);
-                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated2 + " *");
-                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
-                        System.out.println("* " + repeated2 + " *");
+                    if(listBill.isEmpty()){
+                        System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
+                    }else{
+                        repeated1 = new String(new char[179]).replace("\0", border);
+                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
+                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên xuất", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+                        System.out.println("* " + repeated1 + " *");
                         listBill.forEach(Bill::displayDataBill);
-                        System.out.println("* " + repeated2 + " *" + ColorsMenu.ANSI_RESET);
-                        BillManagement.creatDataBill(sc,employeeId);
+                        System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
                     }
 
+                    BillManagement.creatDataBillUser(sc, employeeId);
                     break;
                 case 7:
                     listBill = ReceiptBusiness.getAllDataBillBillStatusByEmpId(employeeId);
-                    if (listBill.isEmpty()) {
-                        System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
-                    } else {
-                        String repeated2 = new String(new char[179]).replace("\0", border);
-                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated2 + " *");
-                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
-                        System.out.println("* " + repeated2 + " *");
+                    if(listBill.isEmpty()){
+                        System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
+                    }else{
+                        repeated1 = new String(new char[179]).replace("\0", border);
+                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
+                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên xuất", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+                        System.out.println("* " + repeated1 + " *");
                         listBill.forEach(Bill::displayDataBill);
-                        System.out.println("* " + repeated2 + " *" + ColorsMenu.ANSI_RESET);
-                        BillManagement.updateDataBillUser(sc);
+                        System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
                     }
+                    BillManagement.updateDataBillUser(sc);
 
                     break;
                 case 8:
                     listBill = ReceiptBusiness.getAllDataBillBillStatusByEmpId(employeeId);
-                    if (listBill.isEmpty()) {
-                        System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
-                    } else {
-                        String repeated2 = new String(new char[179]).replace("\0", border);
-                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated2 + " *");
-                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên nhập", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
-                        System.out.println("* " + repeated2 + " *");
+                    if(listBill.isEmpty()){
+                        System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
+                    }else{
+                        repeated1 = new String(new char[179]).replace("\0", border);
+                        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated1 + " *");
+                        System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s| %-15s|\n", "Mã phiếu", "Mã code", "Loại phiếu", "Mã nhân viên xuất", "Ngày tạo", "Mã nhân viên duyệt", "Ngày duyệt", "Trạng thái");
+                        System.out.println("* " + repeated1 + " *");
                         listBill.forEach(Bill::displayDataBill);
-                        System.out.println("* " + repeated2 + " *" + ColorsMenu.ANSI_RESET);
-                        BillManagement.searchBillUser(employeeId);
+                        System.out.println("* " + repeated1 + " *" + ColorsMenu.ANSI_RESET);
                     }
+                    BillManagement.searchBillUser(employeeId);
 
                     break;
                 case 9:
@@ -134,6 +151,7 @@ public class UserManagement {
                 default:
                     System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-9");
             }
+
         } while (true);
     }
 
@@ -158,10 +176,10 @@ public class UserManagement {
     }
     //1.Danh sách phiếu nhập theo trạng thái
 
-    public static void displayDataReceipt(String employeeId,String userName) throws SQLException {
+    public static void displayDataReceipt(String employeeId, String userName) throws SQLException {
         List<Bill> listBill = ReceiptBusiness.getAllDataReceiptBillStatusByEmpId(employeeId);
         if (listBill.isEmpty()) {
-            System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
         } else {
             String repeated = new String(new char[179]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
@@ -171,11 +189,12 @@ public class UserManagement {
             System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
         }
     }
+
     //1.Danh sách phiếu xuất theo trạng thái
-    public static void displayDataBill(String employeeId,String userName) throws SQLException {
+    public static void displayDataBill(String employeeId, String userName) throws SQLException {
         List<Bill> listBill = ReceiptBusiness.getAllDataBillBillStatusByEmpId(employeeId);
         if (listBill.isEmpty()) {
-            System.out.println(ColorsMenu.RED_BOLD+"UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả"+ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD + "UserName :" + userName + " không có phiếu nhập theo trạng thái Tạo hoặc Hủy nào cả" + ColorsMenu.ANSI_RESET);
         } else {
             String repeated = new String(new char[179]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");

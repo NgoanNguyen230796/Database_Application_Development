@@ -6,10 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="b9b2d867-817b-41cd-b4b9-3b598c95e338" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Session07/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Session07/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Session08/src/ra/businnes/CategoriesBusinnes.java" beforeDir="false" afterPath="$PROJECT_DIR$/Session08/src/ra/businnes/CategoriesBusinnes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Session08/src/ra/businnes/ProductBusinnes.java" beforeDir="false" afterPath="$PROJECT_DIR$/Session08/src/ra/businnes/ProductBusinnes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Session08/src/ra/run/ShopManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/Session08/src/ra/run/ShopManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SessionProject/Database_Project.sql" beforeDir="false" afterPath="$PROJECT_DIR$/SessionProject/Database_Project.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SessionProject/src/ra/businnes/ReceiptBusiness.java" beforeDir="false" afterPath="$PROJECT_DIR$/SessionProject/src/ra/businnes/ReceiptBusiness.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SessionProject/src/ra/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/SessionProject/src/ra/entity/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SessionProject/src/ra/presentation/EmployeeManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/SessionProject/src/ra/presentation/EmployeeManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SessionProject/src/ra/presentation/ProductManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/SessionProject/src/ra/presentation/ProductManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SessionProject/src/ra/presentation/ReceiptManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/SessionProject/src/ra/presentation/ReceiptManagement.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +35,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Database/Session",
+    "last_opened_file_path": "D:/Database/Session/SessionProject",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -89,6 +91,7 @@
       <workItem from="1695815329220" duration="374000" />
       <workItem from="1695815720058" duration="677000" />
       <workItem from="1696724340017" duration="163000" />
+      <workItem from="1696762133056" duration="648000" />
     </task>
     <servers />
   </component>

@@ -21,13 +21,13 @@ public class BillDetailManagement {
         String repeated = new String(new char[117]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         System.out.printf("| %-20s | %-20s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã code", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
-        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *" + ColorsMenu.ANSI_RESET);
         listBillDetail.forEach(Bill_Detail::displayDataBillDetail);
         System.out.println("* " + repeated + " *");
     }
 
     public static void displayBillDetailForReceipt() throws SQLException {
-        listBillDetail=BillDetailBusiness.getAllDataBillDetail();
+        listBillDetail = BillDetailBusiness.getAllDataBillDetail();
         String repeated = new String(new char[117]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         System.out.printf("| %-20s | %-20s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã code", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
@@ -35,8 +35,9 @@ public class BillDetailManagement {
         listBillDetail.forEach(Bill_Detail::displayDataBillDetail);
         System.out.println("* " + repeated + " *");
     }
+
     public static void displayBillDetailForBill() throws SQLException {
-        listBillDetail=BillDetailBusiness.getAllDataBill();
+        listBillDetail = BillDetailBusiness.getAllDataBill();
         String repeated = new String(new char[117]).replace("\0", border);
         System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         System.out.printf("| %-20s | %-20s | %-15s | %-30s | %-20s |\n", "Mã phiếu chi tiết", "Mã code", "Mã sản phẩm", "Số lượng nhập", "Giá Nhập");
@@ -82,6 +83,7 @@ public class BillDetailManagement {
             }
         }
     }
+
     public static void creatDataBillDetailForBill(Scanner sc, long billDetailId) throws SQLException {
         System.out.print("Nhập số lượng Bill Detail mà bạn muốn thêm :");
         while (true) {
@@ -95,7 +97,7 @@ public class BillDetailManagement {
                         for (int i = 0; i < number; i++) {
                             System.out.println("Nhập vào chi tiết phiếu xuất thứ " + (i + 1) + ":");
                             Bill_Detail billDetailNew = new Bill_Detail();
-                            billDetailNew.inputDataBillDetail(billDetailId);
+                            billDetailNew.inputDataBillDetailForBill(billDetailId);
                             boolean result = BillDetailBusiness.creatDataBillDetail(billDetailNew);
                             if (result && number == 1) {
                                 System.out.println(ColorsMenu.GREEN_BOLD + "Thêm mới thành công Bill Detail" + ColorsMenu.ANSI_RESET);
@@ -119,82 +121,76 @@ public class BillDetailManagement {
             }
         }
     }
+
     public static void updateBillDetailForReceipt() throws SQLException {
         boolean isExitUpdateDataReceiptMenu = true;
         boolean result;
         System.out.println("Nhập vào mã phiếu chi tiết mà bạn cần cập nhập thông tin");
         while (isExitUpdateDataReceiptMenu) {
             long billDetailId = Bill_Detail.inputBillDetailId();
+
             Bill_Detail billDetail = BillDetailBusiness.getAllDataBillDetailByBillDetailIdAnd_bill_Type1(billDetailId);
             if (billDetail == null) {
-                System.out.println(ColorsMenu.RED_BOLD+"Có vẻ bạn nhập nhầm mã phiếu chi tiết rồi,vui lòng nhập lại"+ColorsMenu.ANSI_RESET);
+                System.out.println(ColorsMenu.RED_BOLD + "Có vẻ bạn nhập nhầm mã phiếu chi tiết rồi,vui lòng nhập lại" + ColorsMenu.ANSI_RESET);
             } else {
-                String repeated = new String(new char[69]).replace("\0", border);
-                System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
-                System.out.println("========= Vui lòng lựa chọn danh mục cần cập nhật thông tin ==========");
+                boolean isExitDisplayUpdateMenu = true;
+                while (isExitDisplayUpdateMenu) {
+                    String repeated = new String(new char[70]).replace("\0", border);
+                    System.out.println(ColorsMenu.BLUE_BOLD + repeated);
+                    System.out.println("========= Vui lòng lựa chọn danh mục cần cập nhật thông tin ==========");
 //                System.out.println("--              1.Mã phiếu nhập                                     --");
-                System.out.println("--              1.Mã sản phẩm                                       --");
-                System.out.println("--              2.Số lượng nhập                                     --");
-                System.out.println("--              3.Giá Nhập                                          --");
-                System.out.println("--              4.Thoát khỏi cập thông tin chi tiết nhập phiếu nhâp --");
-                System.out.println(repeated + ColorsMenu.ANSI_RESET);
-                System.out.println("Lựa chọn của bạn là :");
-                int choiceUpdate = validateChoiceUpdateReceipt();
-                switch (choiceUpdate) {
-//                    case 1:
-//                        System.out.println("Bạn muốn thay đổi mã phiếu nhập" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getBill_Id() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-//                        billDetail.setBill_Id(Bill_Detail.inputBillDetailId());
-//                        result = BillDetailBusiness.updateDataBillDetail(billDetail);
-//                        if (result) {
-//                            System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + receiptUpdate + " vừa được cập nhật thành công mã nhân viên nhập" + ColorsMenu.ANSI_RESET);
-//                        } else {
-//                            System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-//                        }
-//                        isExitUpdateDataReceiptMenu = false;
-//                        break;
-                    case 1:
-                        System.out.println("Bạn muốn thay đổi mã sản phẩm" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getProduct_Id() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-                        billDetail.setProduct_Id(Bill_Detail.inputProductId());
-                        result = BillDetailBusiness.updateDataBillDetail(billDetail);
-                        if (result) {
-                            System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + billDetailId + " vừa được cập nhật thành công mã sản phẩm" + ColorsMenu.ANSI_RESET);
-                        } else {
-                            System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                        }
-                        isExitUpdateDataReceiptMenu = false;
-                        break;
-                    case 2:
-                        System.out.println("Bạn muốn thay đổi số lượng" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getQuantity() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-                        billDetail.setQuantity(Bill_Detail.inputQuantity());
-                        result = BillDetailBusiness.updateDataBillDetail(billDetail);
-                        if (result) {
-                            System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + billDetailId + " vừa được cập nhật thành công số lượng" + ColorsMenu.ANSI_RESET);
-                        } else {
-                            System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                        }
-                        isExitUpdateDataReceiptMenu = false;
-                        break;
-                    case 3:
-                        System.out.print("Bạn muốn thay đổi giá nhập" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getPrice() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
-                        billDetail.setPrice(Bill_Detail.inputPrice());
-                        result = BillDetailBusiness.updateDataBillDetail(billDetail);
-                        if (result) {
-                            System.out.println(ColorsMenu.GREEN_BOLD + "Mã :" + billDetailId + " vừa được cập nhật thành công giá nhập" + ColorsMenu.ANSI_RESET);
-                        } else {
-                            System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
-                        }
-                        isExitUpdateDataReceiptMenu = false;
-                        break;
-                    case 4:
-                        isExitUpdateDataReceiptMenu = false;
-                        break;
-                    default:
-                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-4");
+                    System.out.println("--              1.Mã sản phẩm                                       --");
+                    System.out.println("--              2.Số lượng nhập                                     --");
+                    System.out.println("--              3.Giá Nhập                                          --");
+                    System.out.println("--              4.Thoát khỏi cập thông tin chi tiết nhập phiếu nhâp --");
+                    System.out.println(repeated + ColorsMenu.ANSI_RESET);
+                    System.out.println("Lựa chọn của bạn là :");
+                    int choiceUpdate = validateChoiceUpdateReceipt();
+                    switch (choiceUpdate) {
+                        case 1:
+                            System.out.println("Bạn muốn thay đổi mã sản phẩm" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getProduct_Id() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                            billDetail.setProduct_Id(Bill_Detail.inputProductId());
+                            result = BillDetailBusiness.updateDataBillDetail(billDetail);
+                            if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Mã phiếu chi tiết :" + billDetailId + " vừa được cập nhật thành công mã sản phẩm" + ColorsMenu.ANSI_RESET);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                            }
+                            break;
+                        case 2:
+                            System.out.println("Bạn muốn thay đổi số lượng" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getQuantity() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                            billDetail.setQuantity(Bill_Detail.inputQuantity());
+                            result = BillDetailBusiness.updateDataBillDetail(billDetail);
+                            if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Mã phiếu chi tiết:" + billDetailId + " vừa được cập nhật thành công số lượng" + ColorsMenu.ANSI_RESET);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                            }
+                            break;
+                        case 3:
+                            System.out.print("Bạn muốn thay đổi giá nhập" + " từ " + "[" + ColorsMenu.RED_BOLD + billDetail.getPrice() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                            billDetail.setPrice(Bill_Detail.inputPrice());
+                            result = BillDetailBusiness.updateDataBillDetail(billDetail);
+                            if (result) {
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Mã phiếu chi tiết :" + billDetailId + " vừa được cập nhật thành công giá nhập" + ColorsMenu.ANSI_RESET);
+                            } else {
+                                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                            }
+                            break;
+                        case 4:
+                            isExitDisplayUpdateMenu = false;
+                            isExitUpdateDataReceiptMenu = false;
+                            break;
+                        default:
+                            System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-4");
+                    }
                 }
+
 
             }
         }
     }
+
     public static void updateBillDetailForBill() throws SQLException {
         boolean isExitUpdateDataReceiptMenu = true;
         boolean result;
@@ -203,10 +199,10 @@ public class BillDetailManagement {
             long billDetailId = Bill_Detail.inputBillDetailId();
             Bill_Detail billDetail = BillDetailBusiness.getAllDataBillDetailByBillDetailIdAnd_bill_Type0(billDetailId);
             if (billDetail == null) {
-                System.out.println(ColorsMenu.RED_BOLD+"Có vẻ bạn nhập nhầm mã phiếu chi tiết rồi,vui lòng nhập lại"+ColorsMenu.ANSI_RESET);
+                System.out.println(ColorsMenu.RED_BOLD + "Có vẻ bạn nhập nhầm mã phiếu chi tiết rồi,vui lòng nhập lại" + ColorsMenu.ANSI_RESET);
             } else {
                 String repeated = new String(new char[69]).replace("\0", border);
-                System.out.println(ColorsMenu.PURPLE_BOLD + repeated);
+                System.out.println(ColorsMenu.BLUE_BOLD + repeated);
                 System.out.println("========= Vui lòng lựa chọn danh mục cần cập nhật thông tin ==========");
 //                System.out.println("--              1.Mã phiếu nhập                                     --");
                 System.out.println("--              1.Mã sản phẩm                                       --");

@@ -187,7 +187,6 @@ public class Employee {
                     if (inputSearchStr.length() > 100) {
                         System.err.println("Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên chỉ được phép tối đa 100 ký tự, vui lòng nhập lại");
                     } else {
-
                         return inputSearchStr;
                     }
                 } catch (Exception ex2) {

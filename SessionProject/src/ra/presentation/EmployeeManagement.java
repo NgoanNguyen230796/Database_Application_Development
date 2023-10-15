@@ -18,7 +18,8 @@ public class EmployeeManagement {
     public static final int perPage = 10;
     public static final int indexOfPage = 10;
     public static List<Employee> listEmployee = new ArrayList<>();
-    static void displayEmployeeMenu()throws SQLException {
+
+    static void displayEmployeeMenu(String employeeIdOfUserName, String userName) throws SQLException {
         boolean isExitEmployeeMenu = true;
         do {
             String repeated = new String(new char[67]).replace("\0", border);
@@ -35,19 +36,19 @@ public class EmployeeManagement {
             int choiceEmployeeMenu = validateChoiceEmployeeMenu();
             switch (choiceEmployeeMenu) {
                 case 1:
-                    EmployeeManagement.displayDataEmployee(Display);
+                    EmployeeManagement.displayDataEmployee(Display, employeeIdOfUserName, userName);
                     break;
                 case 2:
-                    EmployeeManagement.displayDataEmployee(Create);
+                    EmployeeManagement.displayDataEmployee(Create, employeeIdOfUserName, userName);
                     break;
                 case 3:
-                    EmployeeManagement.displayDataEmployee(Update);
+                    EmployeeManagement.displayDataEmployee(Update, employeeIdOfUserName, userName);
                     break;
                 case 4:
-                    EmployeeManagement.displayDataEmployee(UpdateEmployeeStatus);
+                    EmployeeManagement.displayDataEmployee(UpdateEmployeeStatus,employeeIdOfUserName,userName);
                     break;
                 case 5:
-                    EmployeeManagement.displayDataEmployee(Search);
+                    EmployeeManagement.displayDataEmployee(Search, employeeIdOfUserName, userName);
                     break;
                 case 6:
                     isExitEmployeeMenu = false;
@@ -78,7 +79,7 @@ public class EmployeeManagement {
         }
     }
 
-    public static void displayDataEmployee(EmployeeChoice choiceStatus) throws SQLException {
+    public static void displayDataEmployee(EmployeeChoice choiceStatus, String employeeIdOfUserName, String userName) throws SQLException {
         int cntPage = 0;
         int choiceNextPage = 0;
         int i = 1;
@@ -94,23 +95,23 @@ public class EmployeeManagement {
                         boolean isExitDisplayDataEmployee = true;
                         do {
                             System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
-                            if(i==1 && maxPage==1){
-                                System.out.println("1.Thoát khỏi danh sách nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD+"Vui lòng nhập lựa chọn của bạn : "+ColorsMenu.ANSI_RESET);
+                            if (i == 1 && maxPage == 1) {
+                                System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
-                                if(choiceNextPage!=0) {
+                                if (choiceNextPage != 0) {
                                     isExitDisplayDataEmployee = false;
                                     break;
                                 }
-                            }else if (i == 1) {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
-                                System.out.println("2.Thoát khỏi danh sách nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD+"Vui lòng nhập lựa chọn của bạn : "+ColorsMenu.ANSI_RESET);
+                            } else if (i == 1) {
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
                                     case 1:
                                         i = i + 1;
-                                        cntPage =cntPage + indexOfPage;
+                                        cntPage = cntPage + indexOfPage;
                                         EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
                                         break;
                                     case 2:
@@ -119,17 +120,15 @@ public class EmployeeManagement {
                                     default:
                                         System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                 }
-
-
                             } else if (i == (int) getTotalPage()) {
-                                System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                System.out.println("2.Thoát khỏi danh sách nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD+"Vui lòng nhập lựa chọn của bạn : "+ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
                                     case 1:
                                         i = i - 1;
-                                        cntPage =cntPage - indexOfPage;
+                                        cntPage = cntPage - indexOfPage;
                                         EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
                                         break;
                                     case 2:
@@ -140,20 +139,20 @@ public class EmployeeManagement {
 
                                 }
                             } else {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
+                                System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                 System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                System.out.println("3.Thoát khỏi danh sách nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD+"Vui lòng nhập lựa chọn của bạn : "+ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
+                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                 choiceNextPage = validateChoiceDisplayData();
                                 switch (choiceNextPage) {
                                     case 1:
                                         i = i + 1;
-                                        cntPage =cntPage + indexOfPage;
+                                        cntPage = cntPage + indexOfPage;
                                         EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
                                         break;
                                     case 2:
                                         i = i - 1;
-                                        cntPage =cntPage - indexOfPage;
+                                        cntPage = cntPage - indexOfPage;
                                         EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
                                         break;
                                     case 3:
@@ -167,7 +166,7 @@ public class EmployeeManagement {
                         } while (isExitDisplayDataEmployee);
                     }
                 } else {
-                    System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về nhân viên trong bảng Employee"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về nhân viên trong bảng Employee" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Create:
@@ -180,7 +179,7 @@ public class EmployeeManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Thêm mới nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -199,8 +198,8 @@ public class EmployeeManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi thêm mới nhân viên");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi thêm mới nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Thêm mới nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -224,8 +223,8 @@ public class EmployeeManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi thêm mới nhân viên");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi thêm mới nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Thêm mới nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -250,9 +249,9 @@ public class EmployeeManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("3.Thoát khỏi thêm mới nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi thêm mới nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("4.Thêm mới nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -286,7 +285,7 @@ public class EmployeeManagement {
                         }
                     } while (isCheckExitCreate);
                 } else {
-                    System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về nhân viên trong bảng Employee"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về nhân viên trong bảng Employee" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Update:
@@ -299,7 +298,7 @@ public class EmployeeManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Cập nhật thông tin nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -317,8 +316,8 @@ public class EmployeeManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi cập nhật thông tin nhân viên");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật thông tin nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật thông tin nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -341,8 +340,8 @@ public class EmployeeManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi thêm mới nhân viên");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi thêm mới nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Thêm mới nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -366,9 +365,9 @@ public class EmployeeManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("3.Thoát khỏi thêm mới nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi thêm mới nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("4.Thêm mới nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -401,7 +400,7 @@ public class EmployeeManagement {
                         }
                     } while (isCheckExitUpdate);
                 } else {
-                    System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về nhân viên trong bảng Employee"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về nhân viên trong bảng Employee" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case UpdateEmployeeStatus:
@@ -414,8 +413,8 @@ public class EmployeeManagement {
                             do {
                                 System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
                                 if (i == 1 && maxPage == 1) {
-                                    System.out.println("1.Thoát khỏi danh sách nhân viên");
-                                    System.out.println("2.Cập nhật trạng thái nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi danh sách nhân viên" + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "2.Cập nhật trạng thái nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
                                     switch (choiceNextPage) {
@@ -424,7 +423,7 @@ public class EmployeeManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 2:
-                                            EmployeeManagement.updateDataEmployeeStatus(sc);
+                                            EmployeeManagement.updateDataEmployeeStatus(sc, employeeIdOfUserName,userName);
                                             cntAllDataOfEmployee = getCntDataEmployee();
                                             isExitDisplayDataEmployee = false;
                                             break;
@@ -432,8 +431,8 @@ public class EmployeeManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
                                     }
                                 } else if (i == 1) {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
-                                    System.out.println("2.Thoát khỏi cập nhật trạng thái nhân viên");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật trạng thái nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật trạng thái nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -448,7 +447,7 @@ public class EmployeeManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 3:
-                                            EmployeeManagement.updateDataEmployeeStatus(sc);
+                                           EmployeeManagement.updateDataEmployeeStatus(sc, employeeIdOfUserName,userName);
                                             cntAllDataOfEmployee = getCntDataEmployee();
                                             isExitDisplayDataEmployee = false;
                                             break;
@@ -456,8 +455,8 @@ public class EmployeeManagement {
                                             System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
                                     }
                                 } else if (i == (int) getTotalPage()) {
-                                    System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi cập nhật trạng thái nhân viên");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật trạng thái nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật trạng thái nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -472,7 +471,7 @@ public class EmployeeManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 3:
-                                            EmployeeManagement.updateDataEmployeeStatus(sc);
+                                           EmployeeManagement.updateDataEmployeeStatus(sc, employeeIdOfUserName,userName);
                                             cntAllDataOfEmployee = getCntDataEmployee();
                                             isExitDisplayDataEmployee = false;
                                             break;
@@ -481,9 +480,9 @@ public class EmployeeManagement {
 
                                     }
                                 } else {
-                                    System.out.println("1.Xem trang tiếp theo >>> ");
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
                                     System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                    System.out.println("2.Thoát khỏi cập nhật trạng thái nhân viên");
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi cập nhật trạng thái nhân viên" + ColorsMenu.ANSI_RESET);
                                     System.out.println("3.Cập nhật trạng thái nhân viên");
                                     System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
                                     choiceNextPage = validateChoiceDisplayData();
@@ -503,7 +502,7 @@ public class EmployeeManagement {
                                             isCheckExitUpdateStatus = false;
                                             break;
                                         case 4:
-                                            EmployeeManagement.updateDataEmployeeStatus(sc);
+                                           EmployeeManagement.updateDataEmployeeStatus(sc, employeeIdOfUserName,userName);
                                             cntAllDataOfEmployee = getCntDataEmployee();
                                             isExitDisplayDataEmployee = false;
                                             break;
@@ -516,137 +515,139 @@ public class EmployeeManagement {
                         }
                     } while (isCheckExitUpdateStatus);
                 } else {
-                    System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về nhân viên trong bảng Employee"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về nhân viên trong bảng Employee" + ColorsMenu.ANSI_RESET);
                 }
                 break;
             case Search:
                 if (cntAllDataOfEmployee > 0) {
-                    EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
-                    if (maxPage >= 1) {
-                        boolean isExitDisplayDataEmployee = true;
-                        do {
-                            System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
-                            if (i == 1 && maxPage == 1) {
-                                System.out.println("1.Thoát khỏi tìm kiếm nhân viên");
-                                System.out.println("2.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
-                                choiceNextPage = validateChoiceDisplayData();
-                                switch (choiceNextPage) {
-                                    case 1:
-                                        isExitDisplayDataEmployee = false;
-                                        break;
-                                    case 2:
-                                        cntPage = 0;
-                                        i = 1;
-                                        System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
-                                        String EmployeeSearch = Employee.inputSearch();
-                                        int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
-                                        int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
-                                        EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
-                                        break;
-                                    default:
-                                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
-                                }
+                        EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
+                        if (maxPage >= 1) {
+                            boolean isExitDisplayDataEmployee = true;
+                            do {
+                                System.out.println("Lựa chọn tiếp theo của bạn sẽ là gì ?");
+                                if (i == 1 && maxPage == 1) {
+                                    System.out.println(ColorsMenu.RED_BOLD + "1.Thoát khỏi tìm kiếm nhân viên" + ColorsMenu.ANSI_RESET);
+                                    System.out.println("2.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
+                                    System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                    choiceNextPage = validateChoiceDisplayData();
+                                    switch (choiceNextPage) {
+                                        case 1:
+                                            isExitDisplayDataEmployee = false;
+                                            break;
+                                        case 2:
+                                            cntPage = 0;
+                                            i = 1;
+                                            System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
+                                            String EmployeeSearch = Employee.inputSearch();
+                                            int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
+                                            int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
+                                            EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
+                                            break;
+                                        default:
+                                            System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-2");
+                                    }
 //                                if (choiceNextPage != 0) {
 //                                    isExitDisplayDataEmployee = false;
 //                                    break;
 //                                }
-                            } else if (i == 1) {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
-                                System.out.println("2.Thoát khỏi tìm kiếm nhân viên");
-                                System.out.println("3.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
-                                choiceNextPage = validateChoiceDisplayData();
-                                switch (choiceNextPage) {
-                                    case 1:
-                                        i = i + 1;
-                                        cntPage = cntPage + indexOfPage;
-                                        EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
-                                        break;
-                                    case 2:
-                                        isExitDisplayDataEmployee = false;
-                                        break;
-                                    case 3:
-                                        cntPage = 0;
-                                        i = 1;
-                                        System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
-                                        String EmployeeSearch = Employee.inputSearch();
-                                        int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
-                                        int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
-                                        EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
-                                        break;
-                                    default:
-                                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
-                                }
-                            } else if (i == (int) getTotalPage()) {
-                                System.out.println("1.Quay lại trang thứ " + (i - 1));
-                                System.out.println("2.Thoát khỏi tìm kiếm nhân viên");
-                                System.out.println("3.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
-                                choiceNextPage = validateChoiceDisplayData();
-                                switch (choiceNextPage) {
-                                    case 1:
-                                        i = i - 1;
-                                        cntPage = cntPage - indexOfPage;
-                                        EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
-                                        break;
-                                    case 2:
-                                        isExitDisplayDataEmployee = false;
-                                        break;
-                                    case 3:
-                                        cntPage = 0;
-                                        i = 1;
-                                        System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
-                                        String EmployeeSearch = Employee.inputSearch();
-                                        int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
-                                        int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
-                                        EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
-                                        break;
-                                    default:
-                                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
+                                } else if (i == 1) {
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tìm kiếm nhân viên" + ColorsMenu.ANSI_RESET);
+                                    System.out.println("3.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
+                                    System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                    choiceNextPage = validateChoiceDisplayData();
+                                    switch (choiceNextPage) {
+                                        case 1:
+                                            i = i + 1;
+                                            cntPage = cntPage + indexOfPage;
+                                            EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
+                                            break;
+                                        case 2:
+                                            isExitDisplayDataEmployee = false;
+                                            break;
+                                        case 3:
+                                            cntPage = 0;
+                                            i = 1;
+                                            System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
+                                            String EmployeeSearch = Employee.inputSearch();
+                                            int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
+                                            int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
+                                            EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
+                                            break;
+                                        default:
+                                            System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
+                                    }
+                                } else if (i == (int) getTotalPage()) {
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Quay lại trang thứ " + (i - 1) + ColorsMenu.ANSI_RESET);
+                                    System.out.println(ColorsMenu.RED_BOLD + "2.Thoát khỏi tìm kiếm nhân viên" + ColorsMenu.ANSI_RESET);
+                                    System.out.println("3.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
+                                    System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                    choiceNextPage = validateChoiceDisplayData();
+                                    switch (choiceNextPage) {
+                                        case 1:
+                                            i = i - 1;
+                                            cntPage = cntPage - indexOfPage;
+                                            EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
+                                            break;
+                                        case 2:
+                                            isExitDisplayDataEmployee = false;
+                                            break;
+                                        case 3:
+                                            cntPage = 0;
+                                            i = 1;
+                                            System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
+                                            String EmployeeSearch = Employee.inputSearch();
+                                            int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
+                                            int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
+                                            EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
+                                            break;
+                                        default:
+                                            System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-3");
 
-                                }
-                            } else {
-                                System.out.println("1.Xem trang tiếp theo >>> ");
-                                System.out.println("2.Quay lại trang thứ " + (i - 1));
-                                System.out.println("3.Thoát khỏi tìm kiếm nhân viên");
-                                System.out.println("4.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
-                                System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
-                                choiceNextPage = validateChoiceDisplayData();
-                                switch (choiceNextPage) {
-                                    case 1:
-                                        i = i + 1;
-                                        cntPage = cntPage + indexOfPage;
-                                        EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
-                                        break;
-                                    case 2:
-                                        i = i - 1;
-                                        cntPage = cntPage - indexOfPage;
-                                        EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
-                                        break;
-                                    case 3:
-                                        isExitDisplayDataEmployee = false;
-                                        break;
-                                    case 4:
-                                        cntPage = 0;
-                                        i = 1;
-                                        System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
-                                        String EmployeeSearch = Employee.inputSearch();
-                                        int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
-                                        int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
-                                        EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
-                                        break;
-                                    default:
-                                        System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-4");
+                                    }
+                                } else {
+                                    System.out.println(ColorsMenu.YELLOW_BOLD + "1.Xem trang tiếp theo >>> " + ColorsMenu.ANSI_RESET);
+                                    System.out.println("2.Quay lại trang thứ " + (i - 1));
+                                    System.out.println(ColorsMenu.RED_BOLD + "3.Thoát khỏi tìm kiếm nhân viên" + ColorsMenu.ANSI_RESET);
+                                    System.out.println("4.Tìm kiếm nhân viên theo mã hoặc theo tên nhân viên");
+                                    System.out.println(ColorsMenu.GREEN_BOLD + "Vui lòng nhập lựa chọn của bạn : " + ColorsMenu.ANSI_RESET);
+                                    choiceNextPage = validateChoiceDisplayData();
+                                    switch (choiceNextPage) {
+                                        case 1:
+                                            i = i + 1;
+                                            cntPage = cntPage + indexOfPage;
+                                            EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
+                                            break;
+                                        case 2:
+                                            i = i - 1;
+                                            cntPage = cntPage - indexOfPage;
+                                            EmployeeManagement.paginationDataEmployee(perPage, cntPage, i, maxPage, cntAllDataOfEmployee);
+                                            break;
+                                        case 3:
+                                            isExitDisplayDataEmployee = false;
+                                            break;
+                                        case 4:
+                                            cntPage = 0;
+                                            i = 1;
+                                            System.out.println("Nhập vào mã nhân viên hoặc theo tên nhân viên cần tìm kiếm :");
+                                            String EmployeeSearch = Employee.inputSearch();
+                                            int cntAllDataSearch = EmployeeBusiness.getAllDataSearchEmployee(EmployeeSearch);
+                                            int maxPageSearch = (int) Math.ceil((double) cntAllDataSearch / perPage);
+                                            EmployeeManagement.paginationDataSearchEmployee(perPage, cntPage, i, maxPageSearch, EmployeeSearch, cntAllDataSearch);
+                                            isExitDisplayDataEmployee = false;
+                                            break;
+                                        default:
+                                            System.out.println("Vui lòng nhập lựa chọn của bạn từ 1-4");
 
+                                    }
                                 }
-                            }
-                        } while (isExitDisplayDataEmployee);
-                    }
+                            } while (isExitDisplayDataEmployee);
+                        }
+
                 } else {
-                    System.out.println(ColorsMenu.GREEN_BOLD+"Chưa có dữ liệu về nhân viên trong bảng Employee"+ColorsMenu.ANSI_RESET);
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Chưa có dữ liệu về nhân viên trong bảng Employee" + ColorsMenu.ANSI_RESET);
                 }
-            break;
+                break;
 
         }
     }
@@ -656,18 +657,18 @@ public class EmployeeManagement {
     }
 
     public static void paginationDataEmployee(int perPage, int cntPage, int i, float maxPage,
-                                             int cntAllDataOfEmployee) throws SQLException {
+                                              int cntAllDataOfEmployee) throws SQLException {
         List<Employee> listEmployee = null;
         String repeated = new String(new char[162]).replace("\0", border);
-        System.out.println(ColorsMenu.YELLOW_BOLD+"* " + repeated + " *");
+        System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
         System.out.printf("| %-15s | %-30s | %-15s | %-30s | %-20s | %-20s | %-15s|\n", "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Email", "Số điện thoại", "Địa chỉ", "Trạng thái");
         System.out.println("* " + repeated + " *");
         listEmployee = EmployeeBusiness.getAllDataEmployee(perPage, cntPage);
         listEmployee.forEach(Employee::displayDataEmployee);
         System.out.println("* " + repeated + " *");
-        System.out.print("| Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
+        System.out.print("  Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
         System.out.print("All data : " + cntAllDataOfEmployee + "\n");
-        System.out.println("* " + repeated + " *"+ColorsMenu.ANSI_RESET);
+        System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
     }
 
     public static int validateChoiceDisplayData() {
@@ -734,6 +735,7 @@ public class EmployeeManagement {
             }
         }
     }
+
     public static void updateDataEmployee(Scanner sc) throws SQLException {
         boolean isExitUpdateDataEmployeeMenu = true;
         boolean result;
@@ -751,13 +753,13 @@ public class EmployeeManagement {
                 System.out.println("--              3.Email                                            --");
                 System.out.println("--              4.Số điện thoại                                    --");
                 System.out.println("--              5.Địa chỉ                                          --");
-                System.out.println("--              6.Thoát khỏi cập thông tin nhật nhân viên          --");
+                System.out.println("--              6.Thoát khỏi cập nhật thông tin nhân viên          --");
                 System.out.println(repeated + ColorsMenu.ANSI_RESET);
                 System.out.println("Lựa chọn của bạn là ");
                 int choiceUpdate = validateChoiceUpdateEmployee();
                 switch (choiceUpdate) {
                     case 1:
-                        System.out.print("Bạn muốn thay đổi tên nhân viên" + " từ " + "[" + emy.getEmp_Name() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi tên nhân viên" + " từ " + "[" + ColorsMenu.RED_BOLD + emy.getEmp_Name() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         emy.setEmp_Name(Employee.inputEmployeeUpdateName(employeeIdUpdate));
                         result = EmployeeBusiness.updateDataEmployee(emy);
                         if (result) {
@@ -768,7 +770,7 @@ public class EmployeeManagement {
                         isExitUpdateDataEmployeeMenu = false;
                         break;
                     case 2:
-                        System.out.print("Bạn muốn thay đổi ngày sinh" + " từ " + "[" + emy.getBirth_Of_Date() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi ngày sinh" + " từ " + "[" + ColorsMenu.RED_BOLD + emy.getBirth_Of_Date() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         emy.setBirth_Of_Date(Employee.inputBirthOfDate());
                         result = EmployeeBusiness.updateDataEmployee(emy);
                         if (result) {
@@ -779,7 +781,7 @@ public class EmployeeManagement {
                         isExitUpdateDataEmployeeMenu = false;
                         break;
                     case 3:
-                        System.out.print("Bạn muốn thay đổi email" + " từ " + "[" + emy.getEmail() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi email" + " từ " + "[" + ColorsMenu.RED_BOLD + emy.getEmail() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         emy.setEmail(Employee.inputEmail());
                         result = EmployeeBusiness.updateDataEmployee(emy);
                         if (result) {
@@ -790,7 +792,7 @@ public class EmployeeManagement {
                         isExitUpdateDataEmployeeMenu = false;
                         break;
                     case 4:
-                        System.out.print("Bạn muốn thay đổi số điện thoại" + " từ " + "[" + emy.getPhone() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi số điện thoại" + " từ " + "[" + ColorsMenu.RED_BOLD + emy.getPhone() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         emy.setPhone(Employee.inputPhone());
                         result = EmployeeBusiness.updateDataEmployee(emy);
                         if (result) {
@@ -801,7 +803,7 @@ public class EmployeeManagement {
                         isExitUpdateDataEmployeeMenu = false;
                         break;
                     case 5:
-                        System.out.print("Bạn muốn thay đổi địa chỉ" + " từ " + "[" + emy.getAddress() + "]" + " thành : ");
+                        System.out.print("Bạn muốn thay đổi địa chỉ" + " từ " + "[" + ColorsMenu.RED_BOLD + emy.getAddress() + ColorsMenu.ANSI_RESET + "]" + " thành : ");
                         emy.setAddress(Employee.inputAddress());
                         result = EmployeeBusiness.updateDataEmployee(emy);
                         if (result) {
@@ -821,10 +823,11 @@ public class EmployeeManagement {
 
         } else {
             //Mã nhân viên k tồn tại trong CSDL
-            System.out.println("Mã nhân viên không tồn tại");
+            System.out.println(ColorsMenu.RED_BOLD+"Mã nhân viên không tồn tại"+ColorsMenu.ANSI_RESET);
         }
 
     }
+
     public static int validateChoiceUpdateEmployee() {
         while (true) {
             String inputChoiceEmployeeUpdateMenuStr = sc.nextLine().trim();
@@ -844,24 +847,32 @@ public class EmployeeManagement {
             }
         }
     }
-    public static void updateDataEmployeeStatus(Scanner sc) throws SQLException {
+
+    public static void updateDataEmployeeStatus(Scanner sc, String employeeIdOfUserName,String userName) throws SQLException {
         System.out.println("Nhập vào mã nhân viên cần cập nhật :");
         String employeeIdUpdate = Employee.inputEmpIdUpdate();
         //Kiểm tra mã nhân viên có tồn tại hay không
         Employee emy = EmployeeBusiness.getEmployeeById(employeeIdUpdate);
         if (emy != null) {
-            emy.setEmp_Status(Employee.inputEmpStatus());
-            //Thực hiện cập nhật
-            boolean result = EmployeeBusiness.updateEmployeeStatus(emy);
-            if (result) {
-                System.out.println(ColorsMenu.GREEN_BOLD + "Trạng thái nhân viên có mã nhân viên :" + employeeIdUpdate + " vừa được cập nhật thành công" + ColorsMenu.ANSI_RESET);
+            if (employeeIdOfUserName.equalsIgnoreCase(emy.getEmp_Id())) {
+                System.err.println("Rất tiếc bạn đang đăng nhập tài khoản có UserName là "+userName +" với mã nhân viên là :" + employeeIdOfUserName + " vì vậy không thể chuyển đổi trạng thái của nhân viên sang nghỉ vệc hay nghỉ chế độ được");
             } else {
-                System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                String EmpStatusValue = emy.getEmp_Status() == 0 ? "Hoạt động" : emy.getEmp_Status() == 1 ? "Nghỉ chế độ" : "Nghỉ việc";
+                System.out.println("Bạn muốn thay đổi trạng thái nhân viên" + " từ " + "[" + ColorsMenu.RED_BOLD + EmpStatusValue + ColorsMenu.ANSI_RESET + "]" + " thành : ");
+                emy.setEmp_Status(Employee.inputEmpStatus());
+                //Thực hiện cập nhật
+                boolean result = EmployeeBusiness.updateEmployeeStatus(emy);
+                if (result) {
+                    System.out.println(ColorsMenu.GREEN_BOLD + "Trạng thái nhân viên có mã nhân viên :" + employeeIdUpdate + " vừa được cập nhật thành công" + ColorsMenu.ANSI_RESET);
+                } else {
+                    System.out.println("Có lỗi xảy ra trong quá trình thực hiện,vui lòng thực hiện lại");
+                }
             }
-        } else {
+        }else{
             //Mã nhân viên k tồn tại trong CSDL
-            System.out.println("Mã nhân viên không tồn tại");
+            System.out.println(ColorsMenu.RED_BOLD+"Mã nhân viên không tồn tại"+ColorsMenu.ANSI_RESET);
         }
+
     }
 
     public static void paginationDataSearchEmployee(int perPage, int cntPage, int i, float maxPage, String
@@ -869,7 +880,7 @@ public class EmployeeManagement {
         List<Employee> listEmployeeSearch = null;
         listEmployeeSearch = EmployeeBusiness.searchDataEmployeeByEmployeeNameOrEmployeeId(perPage, cntPage, employeeSearch);
         if (listEmployeeSearch.isEmpty()) {
-            System.out.println(ColorsMenu.GREEN_BOLD + "Không tìm thấy kết quả" + ColorsMenu.ANSI_RESET);
+            System.out.println(ColorsMenu.RED_BOLD + "Không tìm thấy kết quả" + ColorsMenu.ANSI_RESET);
         } else {
             String repeated = new String(new char[162]).replace("\0", border);
             System.out.println(ColorsMenu.YELLOW_BOLD + "* " + repeated + " *");
@@ -877,7 +888,7 @@ public class EmployeeManagement {
             System.out.println("* " + repeated + " *");
             listEmployeeSearch.forEach(Employee::displayDataEmployee);
             System.out.println("* " + repeated + " *");
-            System.out.print("| Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
+            System.out.print("  Page : " + i + " / " + maxPage + "\t\t\t\t\t\t\t");
             System.out.print("All data search : " + cntAllDataSearchOfEmployee + "\n");
             System.out.println("* " + repeated + " *" + ColorsMenu.ANSI_RESET);
         }

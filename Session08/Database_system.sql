@@ -310,6 +310,11 @@ end //
 DELIMITER ;
 call statistics_products_by_category();
 
+select *
+from Product;
+select *
+from Categories;
+
 
 
 
